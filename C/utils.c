@@ -1,3 +1,11 @@
+/*
+ * General utility functions. This includes functions to write debug statements and make assertions.
+ * This assertions and debug statements can be turned off by changing the debug reporting level
+ * using the setDebugReporting function.
+ *
+ * Created by Christopher Chapline.
+ *
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
