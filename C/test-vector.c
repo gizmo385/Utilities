@@ -30,7 +30,7 @@ int *mallocedInt( int a ) {
         *mInt = a;
         return mInt;
     } else {
-        debug( E_ERROR, "malloc returned NULL" );
+        debug( E_ERROR, "malloc returned NULL\n" );
         return mallocedInt( a );
     }
 }
@@ -56,13 +56,13 @@ void testListAddition() {
         add( vector, mallocedInt( i ) );
     }
 
-    assertTrue( vector->size == 10, "Vector size should still be 10!" );
-    assertTrue( vector->capacity == 10, "Vector capacity should still be 10!" );
+    assertTrue( vector->size == 10, "Vector size should still be 10!\n" );
+    assertTrue( vector->capacity == 10, "Vector capacity should still be 10!\n" );
 
     // Attempt to add null and then verify that the addition is not successful
     add( vector, NULL );
-    assertTrue( vector->size == 10, "Vector size should still be 10!" );
-    assertTrue( vector->capacity == 10, "Vector capacity should still be 10!" );
+    assertTrue( vector->size == 10, "Vector size should still be 10!\n" );
+    assertTrue( vector->capacity == 10, "Vector capacity should still be 10!\n" );
 
     freeVector( vector );
 }
@@ -77,16 +77,16 @@ void testListRemoval() {
 
     // Remove a single element
     void *firstRemoved = removeAt( vector, 0 );
-    assertNotNull( firstRemoved, "Removed element shouldn't be NULL!" );
+    assertNotNull( firstRemoved, "Removed element shouldn't be NULL!\n" );
     free( firstRemoved );
-    assertTrue( vector->size == 9, "Vector size should be 9, was %d", vector->size);
+    assertTrue( vector->size == 9, "Vector size should be 9, was %d\n", vector->size);
 
     // Remove the rest of the elements
     for( int i = 1; i < vector->capacity; i++ ) {
         free( removeAt( vector, i ) );
     }
 
-    assertTrue( vector->size == 0, "Vector size should be 0, was %d", vector->size);
+    assertTrue( vector->size == 0, "Vector size should be 0, was %d\n", vector->size);
 
     freeVector( vector );
 }
@@ -127,8 +127,8 @@ void testLargeVectors() {
     }
 
     // Print out the size and capacity
-    assertTrue( vector->capacity >= numElements, "Capacity should be >= %d", numElements );
-    assertTrue( vector->size == numElements, "Capacity should be >= %d", numElements );
+    assertTrue( vector->capacity >= numElements, "Capacity should be >= %d\n", numElements );
+    assertTrue( vector->size == numElements, "Capacity should be >= %d\n", numElements );
 
     //Remove a random 500 elements
     srand( time(NULL) );
