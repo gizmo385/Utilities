@@ -96,11 +96,11 @@ void vdebug( int debugType, const char *format, va_list args ) {
  * msgFormat      -- A printf-style message format
  * VA_ARGS        -- A variable-length list of replacements for the printf-style message format.
  */
-void __assert( bool assertionValue, const char *srcFilename, int lineNumber,
+void __assert( int assertionValue, const char *srcFilename, int lineNumber,
         const char *functionName, char *msgFormat, ... ) {
     if( (globalDebugLevel & E_ERROR) != E_ERROR ) return;
 
-    if( assertionValue == true ) {
+    if( ! assertionValue ) {
         if( debugOutputStream ) {
             fprintf( debugOutputStream, "%s:%d %s: ", srcFilename, lineNumber, functionName );
 
