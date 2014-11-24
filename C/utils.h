@@ -13,7 +13,13 @@
 #define E_ALL       E_FATAL | E_ERROR | E_WARNING | E_DEBUG | E_INFO
 
 /* Assert macros */
+#define assertTrue(assertionValue, msgFormat, ...) __assert((assertionValue), __FILE__, __LINE__, __func__, msgFormat,  __VA_ARGS__ )
+#define assertFalse(assertionValue, msgFormat, ...) __assert((!(assertionValue)), __FILE__, __LINE__, __func__, msgFormat,  __VA_ARGS__ )
+#define assertNull(assertionValue, msgFormat, ...) __assert(((assertionValue) == NULL), __FILE__, __LINE__, __func__, msgFormat,  __VA_ARGS__ )
+#define assertNotNull(assertionValue, msgFormat, ...) __assert(((assertionValue) != NULL), __FILE__, __LINE__, __func__, msgFormat,  __VA_ARGS__ )
 
+//extern void __assert( bool assertionValue, char *srcFilename, int lineNumber, char *functionName,
+        //char *msgFormat, ... );
 extern int globalDebugLevel;
 extern FILE *debugOutputStream;
 
@@ -66,55 +72,7 @@ extern void setDebugOutputStream( FILE *outputStream );
  * msgFormat      -- A printf-style message format
  * VA_ARGS        -- A variable-length list of replacements for the printf-style message format.
  */
-extern void __assert( bool assertionValue, char *srcFilename, int lineNumber, char *functionName,
+extern void __assert( bool assertionValue, const char *srcFilename, int lineNumber, const char *functionName,
         char *msgFormat, ... );
-
-/*
- * Asserts that the value is true, otherwise, it will print the failureFormat and variable
- * substitutions at an E_ERROR debug level.
- *
- * Arguments:
- * value         -- The value to test for truthiness. If this is true, the function will exit.
- * failureFormat -- The format for printing in the case that the value is not true. This follows the
- *                  same format rules as printf.
- * VA_ARGS       -- The items that will be printed at substitution locations in the failureFormat.
- */
-extern void assertTrue( int value, char *failureFormat, ... );
-
-/*
- * Asserts that the value is false, otherwise, it will print the failureFormat and variable
- * substitutions at an E_ERROR debug level.
- *
- * Arguments:
- * value         -- The value to test for falsiness. If this is true, the function will exit.
- * failureFormat -- The format for printing in the case that the value is true. This follows the
- *                  same format rules as printf.
- * VA_ARGS       -- The items that will be printed at substitution locations in the failureFormat.
- */
-extern void assertFalse( int value, char *failureFormat, ... );
-
-/*
- * Asserts that the value is NULL, otherwise, it will print the failureFormat and variable
- * substitutions at an E_ERROR debug level.
- *
- * Arguments:
- * value         -- The value to test for NULL. If this is NULL, the function will exit.
- * failureFormat -- The format for printing in the case that the value is not NULL. This follows the
- *                  same format rules as printf.
- * VA_ARGS       -- The items that will be printed at substitution locations in the failureFormat.
- */
-extern void assertNull( void *value, char *failureFormat, ... );
-
-/*
- * Asserts that the value is not NULL, otherwise, it will print the failureFormat and variable
- * substitutions at an E_ERROR debug level.
- *
- * Arguments:
- * value         -- The value to test for not NULL. If this is not NULL, the function will exit.
- * failureFormat -- The format for printing in the case that the value is NULL. This follows the
- *                  same format rules as printf.
- * VA_ARGS       -- The items that will be printed at substitution locations in the failureFormat.
- */
-extern void assertNotNull( void *value, char *failureFormat, ... );
 
 #endif
