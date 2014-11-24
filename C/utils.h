@@ -10,6 +10,7 @@
 #define E_ALL       E_FATAL | E_ERROR | E_WARNING | E_DEBUG | E_INFO
 
 extern int globalDebugLevel;
+extern FILE *debugOutputStream;
 
 /*
  * Prints debug information if the debug flag is enabled and if the option has been
@@ -32,7 +33,16 @@ extern void debug( int debugType, const char *format, ... );
  * Enabling E_FATAL, E_ERROR, and E_DEBUG:
  * setDebugReporting( E_FATAL | E_ERROR | E_DEBUG );
  */
-extern void setDebugReporting( int debugLevel );
+extern void setDebuggingLevel( int debugLevel );
+
+/*
+ * Sets the stream that debug output will be written to.
+ *
+ * Arguments:
+ * outputStream -- An output stream that debug functions will write their output too
+ *
+ */
+extern void setDebugOutputStream( FILE *outputStream );
 
 /*
  * Asserts that the value is true, otherwise, it will print the failureFormat and variable
