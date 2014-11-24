@@ -16,4 +16,4 @@ test-vector: vector.o utils.o test-vector.o
 
 # Add a clean target that silently removes the .o files
 clean:
-	@rm *.o 2> /dev/null || true
+	@rm *.o test-vector 2> /dev/null || true
