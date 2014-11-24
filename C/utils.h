@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 
 #ifndef UTILS_H
 #define UTILS_H
@@ -13,8 +12,8 @@
 #define E_ALL       E_FATAL | E_ERROR | E_WARNING | E_DEBUG | E_INFO
 
 /* Assert macros */
-#define assertTrue(assertionValue, msgFormat, ...) __assert(assertionValue, __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
-#define assertFalse(assertionValue, msgFormat, ...) __assert((!(assertionValue)), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
+#define assertTrue(assertionValue, msgFormat, ...) __assert((assertionValue), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
+#define assertFalse(assertionValue, msgFormat, ...) __assert((assertionValue), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
 #define assertNull(assertionValue, msgFormat, ...) __assert(((assertionValue) == NULL), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
 #define assertNotNull(assertionValue, msgFormat, ...) __assert(((assertionValue) != NULL), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
 
@@ -72,7 +71,7 @@ extern void setDebugOutputStream( FILE *outputStream );
  * msgFormat      -- A printf-style message format
  * VA_ARGS        -- A variable-length list of replacements for the printf-style message format.
  */
-extern void __assert( bool assertionValue, const char *srcFilename, int lineNumber,
+extern void __assert( int assertionValue, const char *srcFilename, int lineNumber,
         const char *functionName, char *msgFormat, ... );
 
 #endif
