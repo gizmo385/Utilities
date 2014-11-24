@@ -13,7 +13,7 @@ void testLargeVectors();
 int *mallocedInt( int a );
 
 int main( int argc, char *argv[] ) {
-    setDebugReporting( E_ALL );
+    setDebuggingLevel( E_ERROR );
     testListCreation();
     testListAddition();
     testListRemoval();
@@ -119,17 +119,16 @@ void testListResizing() {
 
 void testLargeVectors() {
     Vector *vector = newVector( 10 );
+    const int numElements = 10000;
 
     // Silently add 10000 elements to the vector
-    setDebugReporting( ~ E_DEBUG );
-    for( int i = 0; i < 10000; i++ ) {
+    for( int i = 0; i < numElements; i++ ) {
         add( vector, mallocedInt(i) );
     }
-    setDebugReporting( E_ALL );
 
     // Print out the size and capacity
-    debug( E_DEBUG, "Capacity: %d\n", vector->capacity );
-    debug( E_DEBUG, "Size: %d\n", vector->size );
+    assertTrue( vector->capacity >= numElements, "Capacity should be >= %d", numElements );
+    assertTrue( vector->size == numElements, "Capacity should be >= %d", numElements );
 
     //Remove a random 500 elements
     srand( time(NULL) );

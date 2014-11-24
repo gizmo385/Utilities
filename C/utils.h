@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdbool.h>
+
 #ifndef UTILS_H
 #define UTILS_H
 
@@ -8,6 +11,8 @@
 #define E_DEBUG     8
 #define E_INFO      16
 #define E_ALL       E_FATAL | E_ERROR | E_WARNING | E_DEBUG | E_INFO
+
+/* Assert macros */
 
 extern int globalDebugLevel;
 extern FILE *debugOutputStream;
@@ -43,6 +48,26 @@ extern void setDebuggingLevel( int debugLevel );
  *
  */
 extern void setDebugOutputStream( FILE *outputStream );
+
+/*
+ * Provides the concrete implementation of the assertion testing and output. On test failure, this
+ * will print a message in the following format:
+ *
+ * <srcFilename>:<lineNumber> <functionName>: <msg>
+ *
+ * where <msg> is the msgFormat with replacements parsed in a printf-style manner.
+ *
+ * Arguments:
+ * assertionValue -- If this is false, the assertion output will be printed. Otherwise, nothing will
+ *                   happen.
+ * srcFilename    -- The name of the filename that this assertion is in.
+ * lineNumber     -- The line number that this assertion is on.
+ * functionName   -- The name of the function that this assertion is contained in.
+ * msgFormat      -- A printf-style message format
+ * VA_ARGS        -- A variable-length list of replacements for the printf-style message format.
+ */
+extern void __assert( bool assertionValue, char *srcFilename, int lineNumber, char *functionName,
+        char *msgFormat, ... );
 
 /*
  * Asserts that the value is true, otherwise, it will print the failureFormat and variable

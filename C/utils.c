@@ -14,7 +14,7 @@ int globalDebugLevel;
 #ifndef DEBUG_OUTPUT_STREAM
 #define DEBUG_OUTPUT_STREAM
 
-FILE *debugOutputStream = stdout;
+FILE *debugOutputStream;
 
 #endif
 
@@ -41,7 +41,9 @@ void setDebuggingLevel( int debugLevel ) {
  *
  */
 void setDebugOutputStream( FILE *outputStream ) {
-    debugOutputStream = outputStream;
+    if( ! outputStream ) {
+        debugOutputStream = outputStream;
+    }
 }
 
 /*
@@ -57,7 +59,7 @@ void debug( int debugType, const char *format, ... ) {
     if( (globalDebugLevel & debugType) == debugType ) {
         va_list args;
         va_start(args, format);
-        vprintf(format, args);
+        vfprintf(debugOutputStream ? debugOutputStream : stdout, format, args);
         va_end(args);
     }
 }
