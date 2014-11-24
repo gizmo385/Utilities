@@ -78,3 +78,43 @@ void vdebug( int debugType, const char *format, va_list args ) {
         vfprintf(debugOutputStream, format, args);
     }
 }
+
+/*
+ * Provides the concrete implementation of the assertion testing and output. On test failure, this
+ * will print a message in the following format:
+ *
+ * <srcFilename>:<lineNumber> <functionName>: <msg>
+ *
+ * where <msg> is the msgFormat with replacements parsed in a printf-style manner.
+ *
+ * Arguments:
+ * assertionValue -- If this is false, the assertion output will be printed. Otherwise, nothing will
+ *                   happen.
+ * srcFilename    -- The name of the filename that this assertion is in.
+ * lineNumber     -- The line number that this assertion is on.
+ * functionName   -- The name of the function that this assertion is contained in.
+ * msgFormat      -- A printf-style message format
+ * VA_ARGS        -- A variable-length list of replacements for the printf-style message format.
+ */
+void __assert( bool assertionValue, const char *srcFilename, int lineNumber,
+        const char *functionName, char *msgFormat, ... ) {
+    if( (globalDebugLevel & E_ERROR) != E_ERROR ) return;
+
+    if( assertionValue == true ) {
+        if( debugOutputStream ) {
+            fprintf( debugOutputStream, "%s:%d %s: ", srcFilename, lineNumber, functionName );
+
+            va_list args;
+            va_start(args, msgFormat);
+            vfprintf(debugOutputStream, msgFormat, args);
+            va_end(args);
+        } else {
+            fprintf( stdout, "%s:%d %s: ", srcFilename, lineNumber, functionName );
+
+            va_list args;
+            va_start(args, msgFormat);
+            vfprintf(stdout, msgFormat, args);
+            va_end(args);
+        }
+    }
+}
