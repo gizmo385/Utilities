@@ -17,7 +17,7 @@ int main( int argc, char *argv[] ) {
     testListCreation();
     testInserts();
     testListFind();
-    /*testRemoval();*/
+    testRemoval();
 
     return 0;
 }
@@ -135,5 +135,29 @@ void testListFind() {
 }
 
 void testRemoval() {
+    LList *list = newList( comparisonFunction );
+    const int numElements = 1000;
 
+    // Insert elements
+    for( int i = 0; i < numElements; i++ ) {
+        listInsert( list, mallocInt(i) );
+    }
+
+    // Remove the elements and ensure that the right elements were removed
+    for( int i = 0; i < numElements; i++ ) {
+        int *elementToRemove = mallocInt(i);
+        int *removedElement = listRemove( list, elementToRemove );
+
+        assertNotNull( removedElement, "removedElement is null!\n" );
+
+        int comparisonResult = list->comparisonFunction( elementToRemove, removedElement );
+        assertTrue( comparisonResult == 0, "compare(%d, %d) != 0\n", *elementToRemove,
+                *removedElement );
+
+        free( elementToRemove );
+        free( removedElement );
+    }
+
+    // Free the list
+    listFree( list );
 }
