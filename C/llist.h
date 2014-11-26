@@ -3,13 +3,13 @@
 
 typedef int (*ComparisonFunction)(void *, void *);
 
-typedef struct Node {
+typedef struct ListNode {
     void *data;
-    struct Node *next;
-} Node;
+    struct ListNode *next;
+} ListNode;
 
 typedef struct LList {
-    Node *head;
+    ListNode *head;
     int size;
     ComparisonFunction comparisonFunction;
 } LList;
@@ -25,7 +25,7 @@ typedef struct LList {
  * Returns:
  * The newly allocated node
  */
-extern Node *newNode( void* data, Node *next );
+extern ListNode *newListNode( void* data, ListNode *next );
 
 /*
  * Creates a list that starts with a NULL node.
@@ -64,9 +64,9 @@ extern void *listRemove( LList *list, void *data );
  * data -- The data to search for in the list
  *
  * Returns:
- * The Node containing the desired data, or NULL if it can't be found
+ * The ListNode containing the desired data, or NULL if it can't be found
  */
-extern Node *listFind( LList *list, void *data );
+extern ListNode *listFind( LList *list, void *data );
 
 /*
  * Frees the list and the nodes in the list

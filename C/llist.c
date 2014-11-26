@@ -14,8 +14,8 @@
  * Returns:
  * The newly allocated node
  */
-Node *newNode( void* data, Node *next ) {
-    Node *node = malloc( sizeof(Node) );
+ListNode *newListNode( void* data, ListNode *next ) {
+    ListNode *node = malloc( sizeof(ListNode) );
     node->data = data;
     node->next = next;
 
@@ -31,7 +31,7 @@ Node *newNode( void* data, Node *next ) {
 LList *newList( ComparisonFunction comparisonFunction ) {
     LList *list = malloc( sizeof(LList) );
     list->size = 0;
-    list->head = newNode(NULL, NULL);
+    list->head = newListNode(NULL, NULL);
 
     if( comparisonFunction != NULL ) {
         list->comparisonFunction = comparisonFunction;
@@ -53,7 +53,7 @@ void listInsert( LList *list, void *data ) {
         return;
     }
 
-    Node *current = list->head;
+    ListNode *current = list->head;
     ComparisonFunction compare = list->comparisonFunction;
 
     // Determine where the data will be inserted
@@ -62,7 +62,7 @@ void listInsert( LList *list, void *data ) {
     }
 
     // Insert the element
-    Node *tempNode = newNode( current->data, current->next );
+    ListNode *tempNode = newListNode( current->data, current->next );
     current->data = data;
     current->next = tempNode;
     list->size += 1;
@@ -84,7 +84,7 @@ void *listRemove( LList *list, void *data ) {
         return NULL;
     }
 
-    Node *current = list->head;
+    ListNode *current = list->head;
     ComparisonFunction compare = list->comparisonFunction;
 
     // Determine where the data will be inserted
@@ -94,7 +94,7 @@ void *listRemove( LList *list, void *data ) {
 
     // Remove the element
     void *elementRemoved = current->data;
-    Node *temp = current->next;
+    ListNode *temp = current->next;
     current->data = temp->data;
     current->next = temp->next;
 
@@ -114,8 +114,8 @@ void *listRemove( LList *list, void *data ) {
  * Returns:
  * The Node containing the desired data, or NULL if it can't be found
  */
-Node *listFind( LList *list, void *data ) {
-    Node *current = list->head;
+ListNode *listFind( LList *list, void *data ) {
+    ListNode *current = list->head;
     ComparisonFunction compare = list->comparisonFunction;
 
     while( current->next != NULL && compare( current->data, data ) != 0 ) {
@@ -137,11 +137,11 @@ Node *listFind( LList *list, void *data ) {
  * list -- The list that is being freed
  */
 void listFree( LList *list ) {
-    Node *current = list->head;
+    ListNode *current = list->head;
 
     // Free the nodes along the list
     while( current->next != NULL ) {
-        Node *next = current->next;
+        ListNode *next = current->next;
         free( current->data );
         free( current );
         current = next;

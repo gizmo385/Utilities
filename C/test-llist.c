@@ -74,7 +74,7 @@ void testInserts() {
             numElements, list->size );
 
     // Check that the ordering invariant holds
-    Node *current = list->head;
+    ListNode *current = list->head;
     ComparisonFunction compare = list->comparisonFunction;
     int numElementsCompared = 0;
     while( current->next != NULL ) {
@@ -120,7 +120,7 @@ void testListFind() {
         int *intToFind = mallocInt(i);
 
         // Ensure that the find didn't return null
-        Node *findResult = listFind( list, intToFind );
+        ListNode *findResult = listFind( list, intToFind );
         assertNotNull( findResult, "find(i) should not be NULL!\n" );
 
         // Ensure that the elements are equal
