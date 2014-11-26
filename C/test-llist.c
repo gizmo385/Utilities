@@ -13,7 +13,7 @@ void testListFind();
 void testRemoval();
 
 int main( int argc, char *argv[] ) {
-    setDebugReporting( E_ALL );
+    setDebuggingLevel( E_ERROR );
     testListCreation();
     testInserts();
     testListFind();
@@ -43,63 +43,94 @@ int comparisonFunction( void *aPtr, void *bPtr) {
 }
 
 void testListCreation() {
-    LList *list = newList();
-    LList *sortedList = newSortedList( comparisonFunction );
+    // Create the list
+    LList *list = newList( comparisonFunction );
 
+    // Test the initial conditions of the list
     assertNotNull( list, "List should not be null!\n" );
-    assertNull( list->comparisonFunction, "The unsorted list does not have a comparison function!\n" );
+    assertNotNull( list->head, "List head not be null!\n" );
+    assertNotNull( list->comparisonFunction, "List comparisonFunction not be null!\n" );
+    assertTrue( list->size == 0, "List size should be zero!\n" );
 
-    assertNotNull( sortedList, "List should not be null!\n" );
-    assertNotNull( sortedList->comparisonFunction, "The unsorted list has a comparison function!\n" );
-
+    // Free the list
     listFree( list );
-    listFree( sortedList );
 }
 
 void testInserts() {
-    const int numElements = 10;
+    // Create the list
+    LList *list = newList( comparisonFunction );
+    const int numElements = 100;
+    int prevSize = list->size;
 
-    // Test unsorted list additions
-    LList *list = newList();
-
-    srand( time(NULL) );
-    for( int i = 0; i < numElements; i++ ) {
-        listInsert( list, mallocInt( rand() ) );
+    // Insert a bunch of elements into the list
+    for( int i = 1; i <= numElements; i++ ) {
+        listInsert( list, mallocInt(i) );
+        assertTrue( (prevSize + 1) == list->size, "List size should have increased by 1\n" );
+        prevSize++;
     }
 
-    assertTrue( list->size == numElements, "The list should have %d elements!\n", 20 );
+    // Assert that the right number of elements are present in the list
+    assertTrue( numElements == list->size, "List should now have %d elements, has %d\n",
+            numElements, list->size );
+
+    // Check that the ordering invariant holds
     Node *current = list->head;
-
-    // Traverse the list and ensure that none of the nodes are NULL
-    int elementsHit = 0;
+    ComparisonFunction compare = list->comparisonFunction;
+    int numElementsCompared = 0;
     while( current->next != NULL ) {
-        assertNotNull( current, "The element @ %p should not be NULL!\n", current );
+        void *nodeData = current->data;
+        void *nextNodeData = current->next->data;
+
+        // Segfault prevention check
+        if( nodeData != NULL && nextNodeData != NULL ) {
+            int comparisonResult = compare(nodeData, nextNodeData);
+            assertTrue( comparisonResult < 0, "Assert comparisonResult < 0 failed! (Was %d)\n",
+                    comparisonResult );
+
+            numElementsCompared++;
+        }
+
         current = current->next;
-        elementsHit++;
     }
 
-    // Ensure that we traversed the correct number of elements
-    assertTrue( elementsHit == numElements, "Only hit %d elements!\n", elementsHit );
+    // Ensure that we made some value comparisons throughout the the loop
+    assertTrue( numElementsCompared != 0, "Should haven't compared more than 0 elements!\n" );
+
+    // Test insert at beginning
+    listInsert( list, mallocInt( -1 ) );
+
+    // Test insert at end
+    listInsert( list, mallocInt( 1000 ) );
+
+    // Free the list
     listFree( list );
 }
 
 void testListFind() {
-    const int numElements = 20;
-    LList *list = newList();
+    LList *list = newList( comparisonFunction );
+    const int numElements = 1000;
 
+    // Insert the elements
     for( int i = 0; i < numElements; i++ ) {
         listInsert( list, mallocInt(i) );
     }
 
-
-    // Search for the elements
+    // Find the elements
     for( int i = 0; i < numElements; i++ ) {
-        int *temp = mallocInt( i );
-        Node *result = listFind( list, temp );
+        int *intToFind = mallocInt(i);
 
-        debug( E_DEBUG, "listFind(%d) result = %d\n", i, *((int *) result->data) );
+        // Ensure that the find didn't return null
+        Node *findResult = listFind( list, intToFind );
+        assertNotNull( findResult, "find(i) should not be NULL!\n" );
+
+        // Ensure that the elements are equal
+        int comparisonResult = list->comparisonFunction( intToFind, findResult->data );
+        assertTrue( comparisonResult == 0, "find(%d)->data != %d\n", i, i );
+
+        free( intToFind );
     }
 
+    // Free the list
     listFree( list );
 }
 

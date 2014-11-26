@@ -1,7 +1,8 @@
+#include <stdio.h>
 #include <stdlib.h>
 
-#include "utils.h"
 #include "llist.h"
+#include "utils.h"
 
 /*
  * Creates a new linked list node.
@@ -14,7 +15,7 @@
  * The newly allocated node
  */
 Node *newNode( void* data, Node *next ) {
-    Node *node = (Node *) malloc( sizeof(Node) );
+    Node *node = malloc( sizeof(Node) );
     node->data = data;
     node->next = next;
 
@@ -27,28 +28,14 @@ Node *newNode( void* data, Node *next ) {
  * Returns:
  * The newly allocated linked list
  */
-LList *newList() {
-    LList *list = (LList *) malloc( sizeof(LList) );
+LList *newList( ComparisonFunction comparisonFunction ) {
+    LList *list = malloc( sizeof(LList) );
     list->size = 0;
-    list->comparisonFunction = NULL;
-    list->head = newNode( NULL, NULL );
+    list->head = newNode(NULL, NULL);
 
-    return list;
-}
-
-/*
- * Creates a list that starts with a NULL node.
- *
- * Arguments:
- * comparisonFunction -- A function pointer that can compare two elements and determine their
- *                       relative ordering.
- *
- * Returns:
- * The newly allocated linked list
- */
-LList *newSortedList( int (*comparisonFunction)(void *, void *) ) {
-    LList *list = newList();
-    list->comparisonFunction = comparisonFunction;
+    if( comparisonFunction != NULL ) {
+        list->comparisonFunction = comparisonFunction;
+    }
 
     return list;
 }
@@ -61,12 +48,23 @@ LList *newSortedList( int (*comparisonFunction)(void *, void *) ) {
  * data -- The data to be added into the list
  */
 void listInsert( LList *list, void *data ) {
-    Node *node = listFind( list, data );
-    Node *temp = newNode( node->data, node->next );
+    // You cannot insert NULL into the list
+    if( data == NULL ) {
+        return;
+    }
 
-    node->data = data;
-    node->next = temp;
+    Node *current = list->head;
+    ComparisonFunction compare = list->comparisonFunction;
 
+    // Determine where the data will be inserted
+    while( current->next != NULL && compare(current->data, data) < 0 ) {
+        current = current->next;
+    }
+
+    // Insert the element
+    Node *tempNode = newNode( current->data, current->next );
+    current->data = data;
+    current->next = tempNode;
     list->size += 1;
 }
 
@@ -81,23 +79,29 @@ void listInsert( LList *list, void *data ) {
  * The element that was removed from the list
  */
 void *listRemove( LList *list, void *data ) {
-    Node *node = listFind( list, data );
-
-    if( (node != NULL) && (node->data != NULL) && (node->next != NULL) ) {
-        void *nodeData = node->data;
-        Node *temp = node->next;
-
-        node->next = temp->next;
-        node->data = temp->data;
-
-        free( temp );
-        list->size -= 1;
-
-        return nodeData;
-    } else {
+    // You cannot remove NULL from the list
+    if( data == NULL ) {
         return NULL;
     }
 
+    Node *current = list->head;
+    ComparisonFunction compare = list->comparisonFunction;
+
+    // Determine where the data will be inserted
+    while( current->next != NULL && compare(current->data, data) != 0 ) {
+        current = current->next;
+    }
+
+    // Remove the element
+    void *elementRemoved = current->data;
+    Node *temp = current->next;
+    current->data = temp->data;
+    current->next = temp->next;
+
+    free( temp );
+
+    list->size -= 1;
+    return elementRemoved;
 }
 
 /*
@@ -112,20 +116,18 @@ void *listRemove( LList *list, void *data ) {
  */
 Node *listFind( LList *list, void *data ) {
     Node *current = list->head;
+    ComparisonFunction compare = list->comparisonFunction;
 
-    // Iterate over the list looking for our element
-    if( list->comparisonFunction == NULL ) {
-        while( current->next != NULL && current->data < data ) {
-            current = current->next;
-        }
-    } else {
-        int (*comparisonFunction)( void*, void *) = list->comparisonFunction;
-        while( current->next != NULL && comparisonFunction(data, current->data) < 0 ) {
-            current = current->next;
-        }
+    while( current->next != NULL && compare( current->data, data ) != 0 ) {
+        current = current->next;
     }
 
-    return current;
+    // If the data in current isn't equal to the data we're trying to find, return NULL
+    if( compare( current->data, data ) != 0 ) {
+        return NULL;
+    } else {
+        return current;
+    }
 }
 
 /*
@@ -137,15 +139,16 @@ Node *listFind( LList *list, void *data ) {
 void listFree( LList *list ) {
     Node *current = list->head;
 
-    while( current != NULL ) {
-        if( current->data != NULL ) {
-            free( current->data );
-        }
-
+    // Free the nodes along the list
+    while( current->next != NULL ) {
         Node *next = current->next;
+        free( current->data );
         free( current );
         current = next;
     }
 
+    // Free the last node and the list
+    free( current->data );
+    free( current );
     free( list );
 }

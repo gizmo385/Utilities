@@ -1,6 +1,8 @@
 #ifndef LLIST_H
 #define LLIST_H
 
+typedef int (*ComparisonFunction)(void *, void *);
+
 typedef struct Node {
     void *data;
     struct Node *next;
@@ -9,8 +11,9 @@ typedef struct Node {
 typedef struct LList {
     Node *head;
     int size;
-    int (*comparisonFunction)(void *, void *);
+    ComparisonFunction comparisonFunction;
 } LList;
+
 
 /*
  * Creates a new linked list node.
@@ -31,18 +34,6 @@ extern Node *newNode( void* data, Node *next );
  * The newly allocated linked list
  */
 extern LList *newList();
-
-/*
- * Creates a list that starts with a NULL node.
- *
- * Arguments:
- * comparisonFunction -- A function pointer that can compare two elements and determine their
- *                       relative ordering.
- *
- * Returns:
- * The newly allocated linked list
- */
-extern LList *newSortedList( int (*comparisonFunction)(void *, void *) );
 
 /*
  * Inserts the element into the list.
