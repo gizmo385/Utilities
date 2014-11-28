@@ -27,7 +27,7 @@ int main( int argc, char *argv[] ) {
     testTraversals();
     /*testSuccessor();*/
     /*testPredecessor();*/
-    /*testTreeRemoval();*/
+    testTreeRemoval();
 }
 
 void testTreeCreation() {
@@ -123,7 +123,39 @@ void testPredecessor() {
 }
 
 void testTreeRemoval() {
-    assertNotNull( NULL, "This test is a stub\n" );
+    BST *bst = newBST( comparisonFunction );
+    const int numElements = 5;
+
+    // Insert random elements into the tree (keep track of them in a vector)
+    int *insertedElements[ numElements ];
+    for( int i = 0; i < numElements; i++ ) {
+        int *elementToInsert = mallocInt( rand() );
+        bstInsert( bst, elementToInsert );
+        insertedElements[i] = elementToInsert;
+    }
+
+    // Remove the elements
+    setDebuggingLevel( E_ALL );
+    for( int i = 0; i < numElements; i++ ) {
+        int *intToFind = insertedElements[i];
+        debug( E_DEBUG, "Removing %d from BST.\n", *intToFind );
+        int *foundElement = bstFind( bst, intToFind );
+        assertNotNull( foundElement, "Could not find %d in the list!\n", *intToFind );
+
+        // Check that the right element was found
+        int comparisonResult = comparisonFunction(intToFind, foundElement);
+        assertTrue( comparisonResult == 0, "Elements should be equal!\n" );
+
+        void *removed = bstRemove( bst, intToFind );
+        assertNotNull( removed, "Removed element should not be null!\n" );
+        comparisonResult = comparisonFunction(intToFind, removed);
+        assertNull( bstFind( bst, intToFind ), "Could still find %d after removal!\n", *intToFind );
+    }
+
+    setDebuggingLevel( E_ERROR );
+
+    // Free up BST memory
+    bstFree( bst );
 }
 
 /* Functions for use in testing */

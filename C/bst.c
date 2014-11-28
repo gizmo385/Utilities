@@ -4,11 +4,13 @@
 #include "bst.h"
 #include "utils.h"
 
+/* Implementation specific helper functions */
 void preOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void postOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void inOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
-void *removeHelper( BSTNode *node );
 void freeNode( BSTNode *node );
+void replaceNodeInParent( BST *bst, BSTNode *node, BSTNode *replacement );
+void *removeHelper( BST *bst, BSTNode *node );
 
 /*
  * Creates a new binary search tree node. This node has some data, and references to its left and
@@ -25,6 +27,7 @@ void freeNode( BSTNode *node );
  */
 BSTNode *newNode( void *data, BSTNode *parent, BSTNode *left, BSTNode *right ) {
     BSTNode *node = malloc( sizeof(BSTNode) );
+    node->parent = parent;
     node->data = data;
     node->left = left;
     node->right = right;
@@ -34,13 +37,14 @@ BSTNode *newNode( void *data, BSTNode *parent, BSTNode *left, BSTNode *right ) {
 
 /*
  * Creates a new binary search tree whose elements are ordered with the the supplied comparison
- * function.
+ * function. The root of this new tree will be NULL.
  *
  * Arguments:
  * comparisonFunction -- A function that will be used to order the inserted elements.
  *
  * Returns:
- * A binary search tree ordered with the supplied function whose root is NULL.
+ * A binary search tree ordered with the supplied function whose root is NULL. If the comparison
+ * function is NULL, then this function will return NULL.
  */
 BST *newBST( ComparisonFunction comparisonFunction ) {
     if( comparisonFunction != NULL ) {
@@ -120,7 +124,7 @@ void *bstRemove( BST *bst, void *elementToRemove ) {
         int comparisonResult = compare( elementToRemove, current->data );
 
         if( comparisonResult == 0 ) {
-            return removeHelper( current );
+            return removeHelper( bst, current );
         } else if( comparisonResult < 0 ) {
             current = current->left;
         } else {
@@ -131,9 +135,82 @@ void *bstRemove( BST *bst, void *elementToRemove ) {
     return NULL;
 }
 
-void *removeHelper( BSTNode *node ) {
-    // TODO: Handle 3 deletion cases
-    return NULL;
+/*
+ * Helper function for node deletion in the binary search tree
+ *
+ * Arguments:
+ * node -- The node that is being removed from the tree
+ *
+ * Returns:
+ * The element that was removed
+ */
+void *removeHelper( BST *bst, BSTNode *node ) {
+    void *removedElement = (node != NULL) ? node->data : NULL;
+
+    if( node != NULL ) {
+        BSTNode *left = node->left;
+        BSTNode *right = node->right;
+
+        if( left != NULL && right != NULL ) {
+            replaceNodeInParent( bst, node, successor(node) );
+        } else if( left != NULL ) {
+            replaceNodeInParent( bst, node, left );
+        } else if( right != NULL ) {
+            replaceNodeInParent( bst, node, right );
+        } else {
+            replaceNodeInParent( bst, node, NULL );
+        }
+    }
+
+    free( node );
+    return removedElement;
+}
+
+/*
+ * Replaces a node inside its parent with a replacement
+ *
+ * Arguments:
+ * node        -- The node that is being replaced
+ * replacement -- The node to replace it with
+ */
+void replaceNodeInParent( BST *bst, BSTNode *node, BSTNode *replacement ) {
+    if( node != NULL ) {
+        BSTNode *parent = node->parent;
+
+        if( parent != NULL ) {
+            BSTNode *parentLeft = parent->left;
+            BSTNode *parentRight = parent->right;
+
+            // Determine which side of the parent node that the node is on
+            if( node == parentLeft ) {
+                if( replacement != NULL ) {
+                    replacement->parent = parent;
+                    replacement->left = node->left;
+                    replacement->right = node->right;
+                }
+
+                parent->left = replacement;
+                node->parent = NULL;
+            } else if( node == parentRight ) {
+                if( replacement != NULL ) {
+                    replacement->parent = parent;
+                    replacement->left = node->left;
+                    replacement->right = node->right;
+                }
+
+                parent->right = replacement;
+                node->parent = NULL;
+            }
+        } else if( node == bst->root ) {
+            if( replacement != NULL ) {
+                replacement->parent = NULL;
+                replacement->left = bst->root->left;
+                replacement->right = bst->root->right;
+            }
+
+            bst->root = replacement;
+        }
+    }
 }
 
 /*
