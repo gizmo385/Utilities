@@ -38,6 +38,11 @@ void resizeIfNecessary( Vector *vector ) {
             free( vector->elements );
         }
 
+        // Prevent unitialized pointers from being passed to free()
+        for( int i = vector->capacity; i < newCapacity; i++ ) {
+            newElements[i] = NULL;
+        }
+
         vector->elements = newElements;
         vector->capacity = newCapacity;
 
@@ -63,6 +68,10 @@ Vector *newVector( int initialCapacity ) {
         vector->capacity = initialCapacity;
         vector->size = 0;
         vector->elements = (void **) calloc( initialCapacity, sizeof(void *) );
+
+        for( int i = 0; i < vector->capacity; i++ ) {
+            vector->elements[i] = NULL;
+        }
     }
 
     return vector;
@@ -169,7 +178,10 @@ void *get( Vector *vector, int index ) {
  */
 void freeVector( Vector *vector ) {
     for( int i = 0; i < vector->capacity; i++ ) {
-        free( get(vector, i) );
+        void *itemToFree = get(vector, i);
+        if( itemToFree ) {
+            free( itemToFree );
+        }
     }
 
     free( vector->elements );
