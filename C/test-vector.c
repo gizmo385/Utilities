@@ -42,6 +42,7 @@ void testListCreation() {
     assertNotNull( vector->elements, "Vector elements shouldn't be null!\n" );
 
     assertTrue( vector->size == 0, "Vector size: expected 0, was %d\n", vector->size );
+    assertTrue( vectorIsEmpty(vector), "vectorIsEmpty should be true!%d\n", vector->size );
     assertTrue( vector->capacity == 10, "Vector capacity: expected 10, was %d\n",
             vector->capacity );
 
@@ -57,6 +58,8 @@ void testListAddition() {
     }
 
     assertTrue( vector->size == 10, "Vector size should still be 10!\n" );
+    int isEmpty = vectorIsEmpty(vector);
+    assertFalse( isEmpty, "vectorIsEmpty was %d, should be %d!\n", isEmpty, 0  );
     assertTrue( vector->capacity == 10, "Vector capacity should still be 10!\n" );
 
     // Attempt to add null and then verify that the addition is not successful
