@@ -9,10 +9,10 @@
 void testTreeCreation();
 void testTreeInsertion();
 void testTreeFind();
-void testSuccessor();
-void testPredecessor();
 void testTraversals();
 void testTreeRemoval();
+
+/* Functions used in testing */
 void printNode( BSTNode *node );
 int comparisonFunction( void *aPtr, void *bPtr );
 int *mallocInt( int a );
@@ -25,8 +25,6 @@ int main( int argc, char *argv[] ) {
     testTreeInsertion();
     testTreeFind();
     testTraversals();
-    /*testSuccessor();*/
-    /*testPredecessor();*/
     testTreeRemoval();
 }
 
@@ -114,17 +112,9 @@ void testTraversals() {
 
 }
 
-void testSuccessor() {
-    assertNotNull( NULL, "This test is a stub\n" );
-}
-
-void testPredecessor() {
-    assertNotNull( NULL, "This test is a stub\n" );
-}
-
 void testTreeRemoval() {
     BST *bst = newBST( comparisonFunction );
-    const int numElements = 5;
+    const int numElements = 50;
 
     // Insert random elements into the tree (keep track of them in a vector)
     int *insertedElements[ numElements ];
@@ -135,10 +125,9 @@ void testTreeRemoval() {
     }
 
     // Remove the elements
-    setDebuggingLevel( E_ALL );
     for( int i = 0; i < numElements; i++ ) {
+        // Find the element before we remove it
         int *intToFind = insertedElements[i];
-        debug( E_DEBUG, "Removing %d from BST.\n", *intToFind );
         int *foundElement = bstFind( bst, intToFind );
         assertNotNull( foundElement, "Could not find %d in the list!\n", *intToFind );
 
@@ -147,12 +136,11 @@ void testTreeRemoval() {
         assertTrue( comparisonResult == 0, "Elements should be equal!\n" );
 
         void *removed = bstRemove( bst, intToFind );
-        assertNotNull( removed, "Removed element should not be null!\n" );
-        comparisonResult = comparisonFunction(intToFind, removed);
-        assertNull( bstFind( bst, intToFind ), "Could still find %d after removal!\n", *intToFind );
-    }
 
-    setDebuggingLevel( E_ERROR );
+        assertNull( bstFind( bst, intToFind ), "Could still find %d after removal!\n", *intToFind );
+        free( removed );
+
+    }
 
     // Free up BST memory
     bstFree( bst );
