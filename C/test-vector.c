@@ -53,14 +53,14 @@ void testListAddition() {
 
     // Add 10 element
     for( int i = 0; i < vector->capacity; i++ ) {
-        add( vector, mallocedInt( i ) );
+        vectorAdd( vector, mallocedInt( i ) );
     }
 
     assertTrue( vector->size == 10, "Vector size should still be 10!\n" );
     assertTrue( vector->capacity == 10, "Vector capacity should still be 10!\n" );
 
     // Attempt to add null and then verify that the addition is not successful
-    add( vector, NULL );
+    vectorAdd( vector, NULL );
     assertTrue( vector->size == 10, "Vector size should still be 10!\n" );
     assertTrue( vector->capacity == 10, "Vector capacity should still be 10!\n" );
 
@@ -72,18 +72,18 @@ void testListRemoval() {
 
     // Add 10 elements
     for( int i = 0; i < vector->capacity; i++ ) {
-        add( vector, mallocedInt( i ) );
+        vectorAdd( vector, mallocedInt( i ) );
     }
 
     // Remove a single element
-    void *firstRemoved = removeAt( vector, 0 );
+    void *firstRemoved = vectorRemove( vector, 0 );
     assertNotNull( firstRemoved, "Removed element shouldn't be NULL!\n" );
     free( firstRemoved );
     assertTrue( vector->size == 9, "Vector size should be 9, was %d\n", vector->size);
 
     // Remove the rest of the elements
     for( int i = 1; i < vector->capacity; i++ ) {
-        free( removeAt( vector, i ) );
+        free( vectorRemove( vector, i ) );
     }
 
     assertTrue( vector->size == 0, "Vector size should be 0, was %d\n", vector->size);
@@ -97,7 +97,7 @@ void testListResizing() {
 
     // Add 20 elements
     for( int i = 0; i < numElements; i++ ) {
-        add( vector, mallocedInt( i ) );
+        vectorAdd( vector, mallocedInt( i ) );
     }
 
     assertTrue( vector->size == numElements, "Vector size should be == %d after item removal, was %d\n",
@@ -108,7 +108,7 @@ void testListResizing() {
     // Remove and free all of the elements in the list
     int size = vector->size;
     for( int i = 0; i < size; i++ ) {
-        void *removed = removeAt( vector, i );
+        void *removed = vectorRemove( vector, i );
         free( removed );
     }
 
@@ -123,7 +123,7 @@ void testLargeVectors() {
 
     // Silently add 10000 elements to the vector
     for( int i = 0; i < numElements; i++ ) {
-        add( vector, mallocedInt(i) );
+        vectorAdd( vector, mallocedInt(i) );
     }
 
     // Print out the size and capacity
@@ -134,7 +134,7 @@ void testLargeVectors() {
     srand( time(NULL) );
     for( int i = 0; i < 100; i++ ) {
         int randomIndex = rand() % vector->size;
-        void *removed = removeAt( vector, randomIndex );
+        void *removed = vectorRemove( vector, randomIndex );
 
         free( removed );
     }
