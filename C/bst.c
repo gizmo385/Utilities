@@ -4,11 +4,13 @@
 #include "bst.h"
 #include "utils.h"
 
+/* Implementation specific helper functions */
 void preOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void postOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void inOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
-void *removeHelper( BSTNode *node );
 void freeNode( BSTNode *node );
+void replaceNodeInParent( BST *bst, BSTNode *node, BSTNode *replacement );
+void *removeHelper( BST *bst, BSTNode *node, void *data );
 
 /*
  * Creates a new binary search tree node. This node has some data, and references to its left and
@@ -25,6 +27,7 @@ void freeNode( BSTNode *node );
  */
 BSTNode *newNode( void *data, BSTNode *parent, BSTNode *left, BSTNode *right ) {
     BSTNode *node = malloc( sizeof(BSTNode) );
+    node->parent = parent;
     node->data = data;
     node->left = left;
     node->right = right;
@@ -34,13 +37,14 @@ BSTNode *newNode( void *data, BSTNode *parent, BSTNode *left, BSTNode *right ) {
 
 /*
  * Creates a new binary search tree whose elements are ordered with the the supplied comparison
- * function.
+ * function. The root of this new tree will be NULL.
  *
  * Arguments:
  * comparisonFunction -- A function that will be used to order the inserted elements.
  *
  * Returns:
- * A binary search tree ordered with the supplied function whose root is NULL.
+ * A binary search tree ordered with the supplied function whose root is NULL. If the comparison
+ * function is NULL, then this function will return NULL.
  */
 BST *newBST( ComparisonFunction comparisonFunction ) {
     if( comparisonFunction != NULL ) {
@@ -113,27 +117,88 @@ void bstInsert( BST *bst, void *elementToInsert ) {
  * The element that was removed, or NULL if the element could not be found.
  */
 void *bstRemove( BST *bst, void *elementToRemove ) {
-    BSTNode *current = bst->root;
-    ComparisonFunction compare = bst->comparisonFunction;
+    return removeHelper( bst, bst->root, elementToRemove );
+}
 
-    while( current != NULL ) {
-        int comparisonResult = compare( elementToRemove, current->data );
+/*
+ * Helper function for node deletion in the binary search tree
+ *
+ * Arguments:
+ * node -- The node that is being removed from the tree
+ *
+ * Returns:
+ * The element that was removed, or NULL if the element could not be found.
+ */
+void *removeHelper( BST *bst, BSTNode *node, void *data ) {
+    void *removed = NULL;
+    if( bst && node ) {
+        int comparisonResult = bst->comparisonFunction( data, node->data );
 
-        if( comparisonResult == 0 ) {
-            return removeHelper( current );
-        } else if( comparisonResult < 0 ) {
-            current = current->left;
+        if( comparisonResult < 0 ) {
+            removed = removeHelper( bst, node->left, data );
+        } else if( comparisonResult > 0 ) {
+            removed = removeHelper( bst, node->right, data );
         } else {
-            current = current->right;
+            removed = node->data;
+            BSTNode *left = node->left;
+            BSTNode *right = node->right;
+
+            if( left && right ) {
+                // Node with both children
+                BSTNode *successorNode = successor( node );
+                node->data = successorNode->data;
+                removeHelper( bst, successorNode, successorNode->data );
+            } else if( left ) {
+                // Node with only a left child
+                replaceNodeInParent(bst, node, left);
+            } else if( right ) {
+                // Node with only a right child
+                replaceNodeInParent(bst, node, right);
+            } else {
+                // Node with no children
+                replaceNodeInParent( bst, node, NULL );
+            }
         }
     }
 
-    return NULL;
+    return removed;
 }
 
-void *removeHelper( BSTNode *node ) {
-    // TODO: Handle 3 deletion cases
-    return NULL;
+/*
+ * Replaces a node inside its parent with a replacement
+ *
+ * Arguments:
+ * node        -- The node that is being replaced
+ * replacement -- The node to replace it with
+ */
+void replaceNodeInParent( BST *bst, BSTNode *node, BSTNode *replacement ) {
+    if( node ) {
+        if( node->parent ) {
+            // If the node has a parent, make sure that those relationships get properly established
+            BSTNode *parent = node->parent;
+
+            // Replace the correct node in the parent
+            if( parent->left == node ) {
+                parent->left = replacement;
+            } else if( parent->right == node ) {
+                parent->right= replacement;
+            }
+
+            // Set the replacements parent
+            if( replacement ) {
+                replacement->parent = parent;
+            }
+        } else if( node == bst->root ) {
+            // The root is a special case because its parent is NULL
+            bst->root = replacement;
+
+            if( replacement ) {
+                replacement->parent = NULL;
+            }
+        }
+
+        free( node );
+    }
 }
 
 /*

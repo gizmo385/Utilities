@@ -28,4 +28,4 @@ test-bst: bst.o utils.o test-bst.o
 
 # Add a clean target that silently removes the .o files
 clean:
-	@rm *.o test-llist test-vector 2> /dev/null || true
+	@rm *.o test-llist test-vector test-bst 2> /dev/null || true
