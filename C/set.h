@@ -122,4 +122,6 @@ extern void setForEach( Set *set, SetConsumer consumer );
  * Returns:
  * A new set containing every element within the original set after the function has been applied.
  */
-extern Set *setMap( Set *set, MapFunction function, ComparisonFunction, comparisonFunction);
+extern Set *setMap( Set *set, MapFunction function, ComparisonFunction comparisonFunction);
+
+#endif
