@@ -34,7 +34,7 @@ extern Vector *newVector( int initialCapacity );
  * vector  -- The vector that the element is being added to
  * element -- The element that is being added to the vector
  */
-extern void add( Vector *vector, void *element );
+extern void vectorAdd( Vector *vector, void *element );
 
 /*
  * Inserts an element into a specified index in a vector. If this falls outside the bounds of the
@@ -49,7 +49,7 @@ extern void add( Vector *vector, void *element );
  * In the case that the element is successfully inserted, this will return 1. Otherwise, it will
  * return 0.
  */
-extern int insert( Vector *vector, void *element, int index );
+extern int vectorInsert( Vector *vector, void *element, int index );
 
 /*
  * Removes the element from the vector at the specified location.
@@ -58,7 +58,7 @@ extern int insert( Vector *vector, void *element, int index );
  * vector -- The vector to remove from
  * index  -- The index of the element to remove
  */
-extern void *removeAt( Vector *vector, int index );
+extern void *vectorRemove( Vector *vector, int index );
 
 /*
  * Returns whether or not the supplied vector is empty. This will return 1 when the vector is empty
@@ -70,7 +70,7 @@ extern void *removeAt( Vector *vector, int index );
  * Returns:
  * 1 in the case that the vector is empty, 0 otherwise.
  */
-extern int isEmpty( Vector *vector );
+extern int vectorIsEmpty( Vector *vector );
 
 /*
  * Returns the value at the specified index in the vector.
@@ -82,7 +82,7 @@ extern int isEmpty( Vector *vector );
  * Returns:
  * The element in the location
  */
-extern void *get( Vector *vector, int index );
+extern void *vectorGet( Vector *vector, int index );
 
 /*
  * Frees up the memory used by the vector.

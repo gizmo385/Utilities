@@ -21,7 +21,7 @@
 
 /* Assert macros */
 #define assertTrue(assertionValue, msgFormat, ...) __assert((assertionValue), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
-#define assertFalse(assertionValue, msgFormat, ...) __assert((assertionValue), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
+#define assertFalse(assertionValue, msgFormat, ...) __assert(((assertionValue) == 0), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
 #define assertNull(assertionValue, msgFormat, ...) __assert(((assertionValue) == NULL), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
 #define assertNotNull(assertionValue, msgFormat, ...) __assert(((assertionValue) != NULL), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
 

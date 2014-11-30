@@ -85,7 +85,7 @@ Vector *newVector( int initialCapacity ) {
  * vector  -- The vector that the element is being added to
  * element -- The element that is being added to the vector
  */
-void add( Vector *vector, void *element ) {
+void vectorAdd( Vector *vector, void *element ) {
     if( element == NULL ) {
         debug( E_WARNING, "Cannot add a NULL element to the vector!\n" );
         return;
@@ -109,7 +109,7 @@ void add( Vector *vector, void *element ) {
  * In the case that the element is successfully inserted, this will return 1. Otherwise, it will
  * return 0.
  */
-int insert( Vector *vector, void *element, int index ) {
+int vectorInsert( Vector *vector, void *element, int index ) {
     if( isInBounds( vector, index ) ) {
         vector->elements[index] = element;
         return 1;
@@ -125,7 +125,7 @@ int insert( Vector *vector, void *element, int index ) {
  * vector -- The vector to remove from
  * index  -- The index of the element to remove
  */
-void *removeAt( Vector *vector, int index ) {
+void *vectorRemove( Vector *vector, int index ) {
     if( isInBounds( vector, index ) ) {
         void *removedElement = vector->elements[index];
         vector->elements[index] = NULL;
@@ -147,7 +147,7 @@ void *removeAt( Vector *vector, int index ) {
  * Returns:
  * 1 in the case that the vector is empty, 0 otherwise.
  */
-int isEmpty( Vector *vector ) {
+int vectorIsEmpty( Vector *vector ) {
     return (vector->size == 0);
 }
 
@@ -161,7 +161,7 @@ int isEmpty( Vector *vector ) {
  * Returns:
  * The element in the location or NULL if the index is out of bounds
  */
-void *get( Vector *vector, int index ) {
+void *vectorGet( Vector *vector, int index ) {
     if( isInBounds( vector, index ) ) {
         return vector->elements[index];
     } else {
@@ -178,7 +178,7 @@ void *get( Vector *vector, int index ) {
  */
 void freeVector( Vector *vector ) {
     for( int i = 0; i < vector->capacity; i++ ) {
-        void *itemToFree = get(vector, i);
+        void *itemToFree = vectorGet(vector, i);
         if( itemToFree ) {
             free( itemToFree );
         }
