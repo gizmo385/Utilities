@@ -26,6 +26,10 @@ bst.o: bst.c bst.h utils.h functions.h
 test-bst: bst.o utils.o test-bst.o
 	${CC} ${CFLAGS} -o test-bst test-bst.o bst.o utils.o
 
+# Set make directives
+set.o: set.c set.h utils.h functions.h bst.o
+	${CC} ${CFLAGS} -c set.c
+
 # Add a clean target that silently removes the .o files
 clean:
 	@rm *.o test-llist test-vector test-bst 2> /dev/null || true
