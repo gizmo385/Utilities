@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "bst.h"
 #include "utils.h"
@@ -10,6 +11,7 @@ void postOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void inOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void freeNode( BSTNode *node );
 void replaceNodeInParent( BST *bst, BSTNode *node, BSTNode *replacement );
+void bstVectorHelper( BSTNode *current, Vector *vector );
 void *removeHelper( BST *bst, BSTNode *node, void *data );
 
 /*
@@ -375,6 +377,38 @@ void postOrderHelper(BSTNode *node, BSTNodeConsumer consumer ) {
         postOrderHelper( node->left, consumer );
         postOrderHelper( node->right, consumer );
         consumer( node );
+    }
+}
+
+/*
+ * Creates and returns a vector of the elements within this binary search tree. The items inside the
+ * vector will be in-order.
+ *
+ * Arguments:
+ * bst -- The binary search tree whose elements are being copied into a vector.
+ *
+ * Returns:
+ * A vector containing data from the binary search tree.
+ */
+Vector *bstVector( BST *bst ) {
+    Vector *vector = newVector(10);
+    bstVectorHelper( bst->root, vector );
+    return vector;
+}
+
+/*
+ * Recursively traverses the subtrees of the current node, copies the data in each node, and adds
+ * them to the vector.
+ *
+ * Arguments:
+ * current -- The node that is being traversed
+ * vector  -- The vector that elements are being added to
+ */
+void bstVectorHelper( BSTNode *current, Vector *vector ) {
+    if( current ) {
+        bstVectorHelper( current->left, vector );
+        vectorAdd( vector, current->data );
+        bstVectorHelper( current->right, vector );
     }
 }
 

@@ -92,4 +92,13 @@ extern void *vectorGet( Vector *vector, int index );
  */
 extern void freeVector( Vector *vector );
 
+/*
+ * Frees up the structural memory used by the vector, but doesn't free the elements inside the
+ * vector.
+ *
+ * Arguments:
+ * vector -- The vector whose memory you would like to free
+ */
+extern void freeVectorStructure( Vector *vector );
+
 #endif
