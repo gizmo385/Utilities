@@ -20,11 +20,11 @@ test-llist: llist.o utils.o test-llist.o
 	${CC} ${CFLAGS} -o test-llist test-llist.o llist.o utils.o
 
 # Binary Search Tree make directives
-bst.o: bst.c bst.h utils.h functions.h
+bst.o: bst.c bst.h utils.h functions.h vector.h
 	${CC} ${CFLAGS} -c bst.c
 
-test-bst: bst.o utils.o test-bst.o
-	${CC} ${CFLAGS} -o test-bst test-bst.o bst.o utils.o
+test-bst: bst.o utils.o test-bst.o vector.o
+	${CC} ${CFLAGS} -o test-bst test-bst.o bst.o utils.o vector.o
 
 # Set make directives
 set.o: set.c set.h utils.h functions.h bst.o
