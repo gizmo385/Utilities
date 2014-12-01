@@ -85,8 +85,20 @@ void testTraversals() {
     bstInsert( bst, mallocInt(50) );
     bstInsert( bst, mallocInt(150) );
 
-    // Test pre-order traversal
+    // Test bstVector
     setDebuggingLevel( E_ALL );
+    debug(E_DEBUG, "Vector Traversal (Should be 50 100 150):\n");
+    debug(E_DEBUG, "-------------------------------------------\n" );
+    Vector *vector = bstVector(bst);
+    for( int i = 0; i < vector->size; i++ ) {
+        void *element = vectorGet(vector, i);
+        printf( "%d ", *(int *)element );
+    }
+    freeVectorStructure(vector);
+    debug( E_DEBUG, "\n" );
+    debug(E_DEBUG, "-------------------------------------------\n\n" );
+
+    // Test pre-order traversal
     debug(E_DEBUG, "Pre-Order Traversal (Should be 100 50 150):\n");
     debug(E_DEBUG, "-------------------------------------------\n" );
     bstPreOrder( bst, printNode );
