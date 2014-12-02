@@ -76,11 +76,13 @@ bool isInSet( Set *set, void *element ) {
  * Arguments:
  * setA -- The first set in the pair of sets to union
  * setB -- The second set in the pair of sets to union
+ * comparisonfunction -- A function to compare the elements in the union. If this is NULL, the
+ *                       comparison function from setA will be used.
  *
  * Returns:
  * A set containing all non-equivalent elements from setA and setB.
  */
-Set *setUnion( Set *setA, Set *setB ) {
+Set *setUnion( Set *setA, Set *setB, ComparisonFunction comparisonFunction ) {
     // TODO
     return NULL;
 }
@@ -110,7 +112,7 @@ Set *setIntersect( Set *setA, Set *setB ) {
  * set      -- The set that will have the function applied
  * consumer -- The function that will be applied to every element within the set.
  */
-void setForEach( Set *set, SetConsumer consumer ) {
+void setForEach( Set *set, ElementConsumer consumer ) {
     // TODO
 }
 
@@ -120,7 +122,9 @@ void setForEach( Set *set, SetConsumer consumer ) {
  *
  * Arguments:
  * set                -- The set whose elements will be mapped over
- * function           -- The function that will be applied to every element in the set
+ * function           -- The function that will be applied to every element in the set. This
+ *                       function should allocate new space for the result rather than overwrite the
+ *                       space already present.
  * comparisonfunction -- A function that can be used to compare elements in the codomain of the
  *                       mapping function. This can safely be set to NULL if it is known that the
  *                       codomain is the set as the domain of the mapping function. If this is NULL
@@ -132,6 +136,31 @@ void setForEach( Set *set, SetConsumer consumer ) {
  * A new set containing every element within the original set after the function has been applied.
  */
 Set *setMap( Set *set, MapFunction function, ComparisonFunction comparisonFunction) {
-    // TODO
-    return NULL;
+    if( ! comparisonFunction ) {
+        comparisonFunction = set->elements->comparisonFunction;
+    }
+
+    // Create the new set and get the elements from the old set
+    Set *result = newSet( comparisonFunction );
+    Vector *elements = bstVector( set->elements );
+
+    // Apply the function to each element in the old set, then add it to the new set
+    for( int i = 0; i < elements->size; i++ ) {
+        void *element = function( vectorGet(elements, i) );
+        setAdd( result, element );
+    }
+
+    freeVectorStructure( elements );
+    return result;
+}
+
+/*
+ * Frees the memory used by this set.
+ *
+ * Arguments:
+ * set -- The set whose you would like to free
+ */
+void setFree( Set *set ) {
+    bstFree( set->elements );
+    free(set);
 }

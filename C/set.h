@@ -6,17 +6,6 @@
 #include "bst.h"
 #include "functions.h"
 
-/*
- * A set consumer is an function which is applied to each element in a set
- */
-typedef void (*SetConsumer)(void *);
-
-/*
- * A map function takes an element, performs some modification on that element and returns the
- * modified element.
- */
-typedef void *(*MapFunction)(void *);
-
 typedef struct Set {
     BST *elements;
     int size;
@@ -75,11 +64,13 @@ extern bool isInSet( Set *set, void *element );
  * Arguments:
  * setA -- The first set in the pair of sets to union
  * setB -- The second set in the pair of sets to union
+ * comparisonfunction -- A function to compare the elements in the union. If this is NULL, the
+ *                       comparison function from setA will be used.
  *
  * Returns:
  * A set containing all non-equivalent elements from setA and setB.
  */
-extern Set *setUnion( Set *setA, Set *setB );
+extern Set *setUnion( Set *setA, Set *setB, ComparisonFunction comparisonFunction );
 
 /*
  * Calculates the set theoretic intersection of two sets. An intersection creates a set whose
@@ -103,7 +94,7 @@ extern Set *setIntersect( Set *setA, Set *setB );
  * set      -- The set that will have the function applied
  * consumer -- The function that will be applied to every element within the set.
  */
-extern void setForEach( Set *set, SetConsumer consumer );
+extern void setForEach( Set *set, ElementConsumer consumer );
 
 /*
  * Creates a new set where the elements in the set derived by applying the map function to every
@@ -124,4 +115,11 @@ extern void setForEach( Set *set, SetConsumer consumer );
  */
 extern Set *setMap( Set *set, MapFunction function, ComparisonFunction comparisonFunction);
 
+/*
+ * Frees the memory used by this set.
+ *
+ * Arguments:
+ * set -- The set whose you would like to free
+ */
+extern void setFree( Set *set );
 #endif
