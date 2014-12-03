@@ -94,7 +94,7 @@ void testTraversals() {
         void *element = vectorGet(vector, i);
         printf( "%d ", *(int *)element );
     }
-    freeVectorStructure(vector);
+    vectorFreeStructure(vector);
     debug( E_DEBUG, "\n" );
     debug(E_DEBUG, "-------------------------------------------\n\n" );
 

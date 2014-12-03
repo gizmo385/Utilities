@@ -195,7 +195,7 @@ void freeVector( Vector *vector ) {
  * Arguments:
  * vector -- The vector whose memory you would like to free
  */
-void freeVectorStructure( Vector *vector ) {
+void vectorFreeStructure( Vector *vector ) {
     free( vector->elements );
     free( vector );
 }
