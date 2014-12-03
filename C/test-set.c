@@ -15,8 +15,9 @@ void testSetMapping();
 
 /* Functions used in testing */
 int *mallocInt( int a );
-int comparisonFunction( void *aPtr, void *bPtr);
 int *increment(int *x);
+int comparisonFunction( int *aPtr, int *bPtr);
+void printInt( int *number );
 
 int main( int argc, char *argv[] ) {
     setDebuggingLevel( E_ERROR );
@@ -31,12 +32,12 @@ int main( int argc, char *argv[] ) {
 }
 
 void testNewSet() {
-    Set *set = newSet(comparisonFunction);
+    Set *set = newSet( (ComparisonFunction) comparisonFunction);
     setFree(set);
 }
 
 void testSetAdd() {
-    Set *set = newSet(comparisonFunction);
+    Set *set = newSet( (ComparisonFunction) comparisonFunction);
     const int numElements = 50;
 
     // Test basic insertion
@@ -59,7 +60,7 @@ void testSetAdd() {
 }
 
 void testSetRemove() {
-    Set *set = newSet(comparisonFunction);
+    Set *set = newSet( (ComparisonFunction) comparisonFunction);
     const int numElements = 50;
     const int numElementsToRemove = 20;
 
@@ -93,7 +94,7 @@ void testSetRemove() {
 }
 
 void testIsInSet() {
-    Set *set = newSet(comparisonFunction);
+    Set *set = newSet( (ComparisonFunction) comparisonFunction);
     const int numElements = 50;
 
     // Insert the elements
@@ -126,7 +127,7 @@ void testSetIntersect() {
 }
 
 void testSetMapping() {
-    Set *set = newSet(comparisonFunction);
+    Set *set = newSet( (ComparisonFunction) comparisonFunction);
     const int numElements = 50;
 
     // Insert the elements
@@ -135,12 +136,18 @@ void testSetMapping() {
         setAdd( set, newValue );
     }
 
+    // Map increment over the set
     Set *mapResult = setMap( set, (MapFunction) increment, NULL );
     for( int i = 1; i <= numElements; i++ ) {
         int *elementToFind = mallocInt(i);
         assertTrue( isInSet(mapResult, elementToFind), "%d should be in the map result!" );
         free( elementToFind );
     }
+
+    // Print out the numbers. Should be 1 - numElements, inclusive.
+    printf("Printing out set. Should be the numbers from 1 to %d inclusive:\n", numElements);
+    setForEach( mapResult, (ElementConsumer)printInt );
+    printf("\n");
 
     setFree( mapResult );
     setFree( set );
@@ -153,9 +160,9 @@ int *mallocInt( int a ) {
     return newInt;
 }
 
-int comparisonFunction( void *aPtr, void *bPtr) {
-    int a = *((int *) aPtr);
-    int b = *((int *) bPtr);
+int comparisonFunction( int *aPtr, int *bPtr) {
+    int a = *aPtr;
+    int b = *bPtr;
 
     if( a < b ) {
         return -1;
@@ -170,4 +177,8 @@ int *increment(int *x) {
     int *result = malloc( sizeof(int) );
     *result = (*x) + 1;
     return result;
+}
+
+void printInt( int *number ) {
+    printf( "%d ", *number );
 }

@@ -113,7 +113,11 @@ Set *setIntersect( Set *setA, Set *setB ) {
  * consumer -- The function that will be applied to every element within the set.
  */
 void setForEach( Set *set, ElementConsumer consumer ) {
-    // TODO
+    Vector *elements = bstVector( set->elements );
+
+    for( int i = 0; i < elements->size; i++ ) {
+        consumer( vectorGet(elements, i) );
+    }
 }
 
 /*
