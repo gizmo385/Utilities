@@ -1,5 +1,9 @@
+# Compiler options
 CC = gcc
 CFLAGS = -g -Wall -std=c99
+
+# This regular expression matches the names of files from the test make directives
+BINARY_REGEX = "test-(\w+)$$"
 
 # Utility targets
 utils.o: utils.c utils.h
@@ -35,4 +39,5 @@ test-set: set.o bst.o vector.o utils.o test-set.o
 
 # Add a clean target that silently removes the .o files
 clean:
-	@rm *.o test-llist test-vector test-bst 2> /dev/null || true
+	@rm *.o 2> /dev/null || true
+	@ls | egrep ${BINARY_REGEX} | xargs rm 2> /dev/null || true
