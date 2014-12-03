@@ -1,6 +1,7 @@
 #ifndef BST_H
 #define BST_H
 
+#include "vector.h"
 #include "functions.h"
 
 typedef struct BSTNode {
@@ -141,6 +142,18 @@ extern void bstInOrder( BST *bst, BSTNodeConsumer consumer );
 extern void bstPostOrder( BST *bst, BSTNodeConsumer consumer );
 
 /*
+ * Creates and returns a vector of the elements within this binary search tree. The items inside the
+ * vector will be in-order.
+ *
+ * Arguments:
+ * bst -- The binary search tree whose elements are being copied into a vector.
+ *
+ * Returns:
+ * A vector containing data from the binary search tree.
+ */
+extern Vector *bstVector( BST *bst );
+
+/*
  * Frees the binary search tree and all nodes within it. This is expressed as a post order traversal
  * on the provided tree where the consumer function frees the node.
  *
@@ -148,5 +161,14 @@ extern void bstPostOrder( BST *bst, BSTNodeConsumer consumer );
  * bst -- The tree that is being freed
  */
 extern void bstFree( BST *bst );
+
+/*
+ * Frees the memory allocated for the structure of the BST. This should be used when you want to
+ * maintain access to the elements that were within the tree.
+ *
+ * Arguments:
+ * bst -- The binary search tree whose structural memory you would like to free
+ */
+extern void bstFreeStructure( BST *bst );
 
 #endif

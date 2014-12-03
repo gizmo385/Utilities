@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "bst.h"
 #include "utils.h"
@@ -9,7 +10,9 @@ void preOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void postOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void inOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void freeNode( BSTNode *node );
+void freeNodeStructure( BSTNode *node );
 void replaceNodeInParent( BST *bst, BSTNode *node, BSTNode *replacement );
+void bstVectorHelper( BSTNode *current, Vector *vector );
 void *removeHelper( BST *bst, BSTNode *node, void *data );
 
 /*
@@ -379,6 +382,38 @@ void postOrderHelper(BSTNode *node, BSTNodeConsumer consumer ) {
 }
 
 /*
+ * Creates and returns a vector of the elements within this binary search tree. The items inside the
+ * vector will be in-order.
+ *
+ * Arguments:
+ * bst -- The binary search tree whose elements are being copied into a vector.
+ *
+ * Returns:
+ * A vector containing data from the binary search tree.
+ */
+Vector *bstVector( BST *bst ) {
+    Vector *vector = newVector(10);
+    bstVectorHelper( bst->root, vector );
+    return vector;
+}
+
+/*
+ * Recursively traverses the subtrees of the current node, copies the data in each node, and adds
+ * them to the vector.
+ *
+ * Arguments:
+ * current -- The node that is being traversed
+ * vector  -- The vector that elements are being added to
+ */
+void bstVectorHelper( BSTNode *current, Vector *vector ) {
+    if( current ) {
+        bstVectorHelper( current->left, vector );
+        vectorAdd( vector, current->data );
+        bstVectorHelper( current->right, vector );
+    }
+}
+
+/*
  * Frees the binary search tree and all nodes within it. This is expressed as a post order traversal
  * on the provided tree where the consumer function frees the node.
  *
@@ -391,6 +426,18 @@ void bstFree( BST *bst ) {
 }
 
 /*
+ * Frees the memory allocated for the structure of the BST. This should be used when you want to
+ * maintain access to the elements that were within the tree.
+ *
+ * Arguments:
+ * bst -- The binary search tree whose structural memory you would like to free
+ */
+void bstFreeStructure( BST *bst ) {
+    bstPostOrder( bst, freeNodeStructure );
+    free( bst );
+}
+
+/*
  * Frees a binary search tree node
  *
  * Arguments:
@@ -398,5 +445,9 @@ void bstFree( BST *bst ) {
  */
 void freeNode( BSTNode *node ) {
     free( node->data );
+    free( node );
+}
+
+void freeNodeStructure( BSTNode *node ) {
     free( node );
 }

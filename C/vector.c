@@ -187,3 +187,15 @@ void freeVector( Vector *vector ) {
     free( vector->elements );
     free( vector );
 }
+
+/*
+ * Frees up the structural memory used by the vector, but doesn't free the elements inside the
+ * vector.
+ *
+ * Arguments:
+ * vector -- The vector whose memory you would like to free
+ */
+void vectorFreeStructure( Vector *vector ) {
+    free( vector->elements );
+    free( vector );
+}
