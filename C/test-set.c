@@ -27,8 +27,8 @@ int main( int argc, char *argv[] ) {
     testSetRemove();
     testIsInSet();
     testSetMapping();
-    /*testSetUnion();*/
-    /*testSetIntersect();*/
+    testSetUnion();
+    testSetIntersect();
 }
 
 void testNewSet() {
@@ -119,11 +119,76 @@ void testIsInSet() {
 }
 
 void testSetUnion() {
-    //TODO
+    const int numElements = 40; // Should be even
+    Set *firstHalf = newSet( (ComparisonFunction) comparisonFunction );
+    Set *secondHalf= newSet( (ComparisonFunction) comparisonFunction );
+
+    //Insert the first half
+    for( int i = 0; i < (numElements / 2); i++ ) {
+        int *elementToAdd = mallocInt(i);
+        setAdd( firstHalf, elementToAdd );
+    }
+
+    assertTrue( firstHalf->size == (numElements / 2), "There should be %d in the first half!\n",
+            (numElements / 2) );
+
+    // Insert the second half
+    for( int i = numElements / 2; i < numElements; i++ ) {
+        int *elementToAdd = mallocInt(i);
+        setAdd( secondHalf, elementToAdd );
+    }
+
+    assertTrue( secondHalf->size == (numElements / 2), "There should be %d in the second half!\n",
+            (numElements / 2) );
+
+    // Union the first and second half to create the full set
+    Set *unionResult = setUnion( firstHalf, secondHalf, NULL );
+    assertTrue( unionResult->size == numElements, "There should %d in the union result!",
+            numElements );
+
+    for( int i = 0; i < numElements; i++ ) {
+        int *elementToFind = mallocInt(i);
+        assertTrue( isInSet(unionResult, elementToFind), "Could not find %d in union result!\n",
+                *elementToFind );
+        free( elementToFind );
+    }
+
+    setFreeStructure( firstHalf );
+    setFreeStructure( secondHalf );
+    setFree( unionResult );
 }
 
 void testSetIntersect() {
-    //TODO
+    // Testing bounds
+    const int firstStart = 0;
+    const int firstEnd = 20;
+    const int secondStart = 10;
+    const int secondEnd = 30;
+
+    Set *first = newSet( (ComparisonFunction) comparisonFunction );
+    Set *second = newSet( (ComparisonFunction) comparisonFunction );
+
+    // Add elements to both sets
+    for( int i = firstStart; i <= firstEnd; i++ ) {
+        setAdd( first, mallocInt(i) );
+    }
+
+    for( int i = secondStart; i <= secondEnd; i++ ) {
+        setAdd( second, mallocInt(i) );
+    }
+
+    Set *intersectionResult = setIntersect( first, second, NULL );
+
+    // Test the intersection
+    for( int i = firstEnd; i <= secondStart; i++ ) {
+        int *element = mallocInt(i);
+        assertTrue( isInSet( intersectionResult, element ), "Couldn't find %d in the intersection!", i );
+        free(element);
+    }
+
+    setFreeStructure( intersectionResult );
+    setFree( first );
+    setFree( second );
 }
 
 void testSetMapping() {

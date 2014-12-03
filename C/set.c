@@ -83,8 +83,31 @@ bool isInSet( Set *set, void *element ) {
  * A set containing all non-equivalent elements from setA and setB.
  */
 Set *setUnion( Set *setA, Set *setB, ComparisonFunction comparisonFunction ) {
-    // TODO
-    return NULL;
+    // Ensure that the proper comparison function gets used
+    if( ! comparisonFunction ) {
+        comparisonFunction = setA->elements->comparisonFunction;
+    }
+
+    // Get the elements from A & B, create a new Set
+    Vector *vectorA = bstVector( setA->elements );
+    Vector *vectorB = bstVector( setB->elements );
+    Set *unionResult = newSet( comparisonFunction );
+
+    // Insert the elements from A into the set
+    for( int i = 0; i < vectorA->size; i++ ) {
+        setAdd( unionResult, vectorGet(vectorA, i) );
+    }
+
+    // Insert the elements from B into the set
+    for( int i = 0; i < vectorB->size; i++ ) {
+        setAdd( unionResult, vectorGet(vectorB, i) );
+    }
+
+    // Free the structure from the element vectors
+    vectorFreeStructure( vectorA );
+    vectorFreeStructure( vectorB );
+
+    return unionResult;
 }
 
 /*
@@ -96,13 +119,49 @@ Set *setUnion( Set *setA, Set *setB, ComparisonFunction comparisonFunction ) {
  * Arguments:
  * setA -- The first set in the pair of sets to intersection
  * setB -- The second set in the pair of sets to intersection
+ * comparisonfunction -- A function to compare the elements in the union. If this is NULL, the
+ *                       comparison function from setA will be used.
  *
  * Returns:
  * A set containing all elements present in both sets.
  */
-Set *setIntersect( Set *setA, Set *setB ) {
-    // TODO
-    return NULL;
+Set *setIntersect( Set *setA, Set *setB, ComparisonFunction comparisonFunction ) {
+    // Ensure that the proper comparison function gets used
+    if( ! comparisonFunction ) {
+        comparisonFunction = setA->elements->comparisonFunction;
+    }
+
+    Set *intersectionResult = newSet( comparisonFunction );
+
+    // Iterate over the smaller set
+    if( setA->size <= setB->size ) {
+        Vector *vector = bstVector( setA->elements );
+
+        for( int i = 0; i < vector->size; i++ ) {
+            void *element = vectorGet( vector, i );
+
+            // If the element is in both sets, add it
+            if( isInSet( setB, element ) ) {
+                setAdd( intersectionResult, element );
+            }
+        }
+
+        vectorFreeStructure( vector );
+    } else {
+        Vector *vector = bstVector( setB->elements );
+
+        for( int i = 0; i < vector->size; i++ ) {
+            void *element = vectorGet( vector, i );
+
+            if( isInSet( setA, element ) ) {
+                setAdd( intersectionResult, element );
+            }
+        }
+
+        vectorFreeStructure( vector );
+    }
+
+    return intersectionResult;
 }
 
 /*
@@ -118,6 +177,8 @@ void setForEach( Set *set, ElementConsumer consumer ) {
     for( int i = 0; i < elements->size; i++ ) {
         consumer( vectorGet(elements, i) );
     }
+
+    vectorFreeStructure( elements );
 }
 
 /*
@@ -154,7 +215,7 @@ Set *setMap( Set *set, MapFunction function, ComparisonFunction comparisonFuncti
         setAdd( result, element );
     }
 
-    freeVectorStructure( elements );
+    vectorFreeStructure( elements );
     return result;
 }
 
@@ -167,4 +228,17 @@ Set *setMap( Set *set, MapFunction function, ComparisonFunction comparisonFuncti
 void setFree( Set *set ) {
     bstFree( set->elements );
     free(set);
+}
+
+/*
+ * Frees the structural memory of the Set without freeing the elements in the set. This should be
+ * used when you want to free the set, but maintain the current access that you have to the elements
+ * within the vector.
+ *
+ * Arguments:
+ * set -- The set whose structure you would like to free.
+ */
+void setFreeStructure( Set *set ) {
+    bstFreeStructure( set->elements );
+    free( set );
 }

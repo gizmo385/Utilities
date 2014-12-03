@@ -81,11 +81,13 @@ extern Set *setUnion( Set *setA, Set *setB, ComparisonFunction comparisonFunctio
  * Arguments:
  * setA -- The first set in the pair of sets to intersection
  * setB -- The second set in the pair of sets to intersection
+ * comparisonfunction -- A function to compare the elements in the union. If this is NULL, the
+ *                       comparison function from setA will be used.
  *
  * Returns:
  * A set containing all elements present in both sets.
  */
-extern Set *setIntersect( Set *setA, Set *setB );
+extern Set *setIntersect( Set *setA, Set *setB, ComparisonFunction comparisonFunction );
 
 /*
  * Applies the consumer function to every element within the set.
@@ -122,4 +124,15 @@ extern Set *setMap( Set *set, MapFunction function, ComparisonFunction compariso
  * set -- The set whose you would like to free
  */
 extern void setFree( Set *set );
+
+/*
+ * Frees the structural memory of the Set without freeing the elements in the set. This should be
+ * used when you want to free the set, but maintain the current access that you have to the elements
+ * that the set contained
+ *
+ * Arguments:
+ * set -- The set whose structure you would like to free.
+ */
+extern void setFreeStructure( Set *set );
+
 #endif
