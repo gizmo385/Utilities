@@ -10,6 +10,7 @@ void preOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void postOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void inOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void freeNode( BSTNode *node );
+void freeNodeStructure( BSTNode *node );
 void replaceNodeInParent( BST *bst, BSTNode *node, BSTNode *replacement );
 void bstVectorHelper( BSTNode *current, Vector *vector );
 void *removeHelper( BST *bst, BSTNode *node, void *data );
@@ -425,6 +426,18 @@ void bstFree( BST *bst ) {
 }
 
 /*
+ * Frees the memory allocated for the structure of the BST. This should be used when you want to
+ * maintain access to the elements that were within the tree.
+ *
+ * Arguments:
+ * bst -- The binary search tree whose structural memory you would like to free
+ */
+void bstFreeStructure( BST *bst ) {
+    bstPostOrder( bst, freeNodeStructure );
+    free( bst );
+}
+
+/*
  * Frees a binary search tree node
  *
  * Arguments:
@@ -432,5 +445,9 @@ void bstFree( BST *bst ) {
  */
 void freeNode( BSTNode *node ) {
     free( node->data );
+    free( node );
+}
+
+void freeNodeStructure( BSTNode *node ) {
     free( node );
 }

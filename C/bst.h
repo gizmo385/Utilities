@@ -162,4 +162,13 @@ extern Vector *bstVector( BST *bst );
  */
 extern void bstFree( BST *bst );
 
+/*
+ * Frees the memory allocated for the structure of the BST. This should be used when you want to
+ * maintain access to the elements that were within the tree.
+ *
+ * Arguments:
+ * bst -- The binary search tree whose structural memory you would like to free
+ */
+extern void bstFreeStructure( BST *bst );
+
 #endif
