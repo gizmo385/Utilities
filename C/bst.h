@@ -1,7 +1,6 @@
 #ifndef BST_H
 #define BST_H
 
-#include "vector.h"
 #include "functions.h"
 
 typedef struct BSTNode {
@@ -14,6 +13,7 @@ typedef struct BSTNode {
 typedef struct BST {
     BSTNode *root;
     ComparisonFunction comparisonFunction;
+    int size;
 } BST;
 
 /*
@@ -142,16 +142,16 @@ extern void bstInOrder( BST *bst, BSTNodeConsumer consumer );
 extern void bstPostOrder( BST *bst, BSTNodeConsumer consumer );
 
 /*
- * Creates and returns a vector of the elements within this binary search tree. The items inside the
- * vector will be in-order.
+ * Creates and returns an array of the elements within this binary search tree. The items inside the
+ * array will be in-order.
  *
  * Arguments:
- * bst -- The binary search tree whose elements are being copied into a vector.
+ * bst -- The binary search tree whose elements are being copied into an array.
  *
  * Returns:
- * A vector containing data from the binary search tree.
+ * An array containing data from the binary search tree.
  */
-extern Vector *bstVector( BST *bst );
+extern void **bstElements( BST *bst );
 
 /*
  * Frees the binary search tree and all nodes within it. This is expressed as a post order traversal

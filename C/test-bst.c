@@ -47,6 +47,8 @@ void testTreeInsertion() {
         bstInsert( bst, mallocInt( rand() ) );
     }
 
+    assertTrue( bst->size == numElements, "BST Size should be %d, was %d!\n", numElements, bst->size );
+
     bstFree( bst );
 }
 
@@ -87,14 +89,13 @@ void testTraversals() {
 
     // Test bstVector
     setDebuggingLevel( E_ALL );
-    debug(E_DEBUG, "Vector Traversal (Should be 50 100 150):\n");
+    debug(E_DEBUG, "Array Traversal (Should be 50 100 150):\n");
     debug(E_DEBUG, "-------------------------------------------\n" );
-    Vector *vector = bstVector(bst);
-    for( int i = 0; i < vector->size; i++ ) {
-        void *element = vectorGet(vector, i);
+    void **elements = bstElements(bst);
+    for( int i = 0; i < bst->size; i++ ) {
+        void *element = elements[i];
         printf( "%d ", *(int *)element );
     }
-    vectorFreeStructure(vector);
     debug( E_DEBUG, "\n" );
     debug(E_DEBUG, "-------------------------------------------\n\n" );
 
@@ -136,6 +137,8 @@ void testTreeRemoval() {
         insertedElements[i] = elementToInsert;
     }
 
+    assertTrue( bst->size == numElements, "BST size should be %d, was %d!\n", numElements, bst->size );
+
     // Remove the elements
     for( int i = 0; i < numElements; i++ ) {
         // Find the element before we remove it
@@ -153,6 +156,8 @@ void testTreeRemoval() {
         free( removed );
 
     }
+
+    assertTrue( bst->size == 0, "BST size should be 0, was %d!\n", bst->size );
 
     // Free up BST memory
     bstFree( bst );

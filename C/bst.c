@@ -12,7 +12,7 @@ void inOrderHelper(BSTNode *node, BSTNodeConsumer consumer );
 void freeNode( BSTNode *node );
 void freeNodeStructure( BSTNode *node );
 void replaceNodeInParent( BST *bst, BSTNode *node, BSTNode *replacement );
-void bstVectorHelper( BSTNode *current, Vector *vector );
+void bstElementsHelper( BSTNode *current, void **elements, int *index );
 void *removeHelper( BST *bst, BSTNode *node, void *data );
 
 /*
@@ -54,6 +54,7 @@ BST *newBST( ComparisonFunction comparisonFunction ) {
         BST *bst = malloc( sizeof(BST) );
         bst->root = NULL;
         bst->comparisonFunction = comparisonFunction;
+        bst->size = 0;
 
         return bst;
     } else {
@@ -92,6 +93,7 @@ void bstInsert( BST *bst, void *elementToInsert ) {
     }
 
     current = newNode( elementToInsert, parent, NULL, NULL );
+    bst->size += 1;
 
     if( parent != NULL ) {
         // At this point, current is NULL and parent is our soon-to-be parent
@@ -120,7 +122,13 @@ void bstInsert( BST *bst, void *elementToInsert ) {
  * The element that was removed, or NULL if the element could not be found.
  */
 void *bstRemove( BST *bst, void *elementToRemove ) {
-    return removeHelper( bst, bst->root, elementToRemove );
+    void *removed = removeHelper( bst, bst->root, elementToRemove );
+
+    if( removed ) {
+        bst->size -= 1;
+    }
+
+    return removed;
 }
 
 /*
@@ -382,19 +390,22 @@ void postOrderHelper(BSTNode *node, BSTNodeConsumer consumer ) {
 }
 
 /*
- * Creates and returns a vector of the elements within this binary search tree. The items inside the
- * vector will be in-order.
+ * Creates and returns an array of the elements within this binary search tree. The items inside the
+ * array will be in-order.
  *
  * Arguments:
- * bst -- The binary search tree whose elements are being copied into a vector.
+ * bst -- The binary search tree whose elements are being copied into an array.
  *
  * Returns:
- * A vector containing data from the binary search tree.
+ * An array containing data from the binary search tree.
  */
-Vector *bstVector( BST *bst ) {
-    Vector *vector = newVector(10);
-    bstVectorHelper( bst->root, vector );
-    return vector;
+void **bstElements( BST *bst ) {
+    void **elements = calloc( bst->size, sizeof(void *) );
+    int *index = malloc( sizeof(int) );
+    *index = 0;
+    bstElementsHelper( bst->root, elements, index );
+    free( index );
+    return elements;
 }
 
 /*
@@ -405,11 +416,12 @@ Vector *bstVector( BST *bst ) {
  * current -- The node that is being traversed
  * vector  -- The vector that elements are being added to
  */
-void bstVectorHelper( BSTNode *current, Vector *vector ) {
+void bstElementsHelper( BSTNode *current, void **elements, int *index ) {
     if( current ) {
-        bstVectorHelper( current->left, vector );
-        vectorAdd( vector, current->data );
-        bstVectorHelper( current->right, vector );
+        bstElementsHelper( current->left, elements, index );
+        elements[ *index ] = current->data;
+        *index += 1;
+        bstElementsHelper( current->right, elements, index );
     }
 }
 
@@ -448,6 +460,12 @@ void freeNode( BSTNode *node ) {
     free( node );
 }
 
+/*
+ * Frees a binary search tree node without freeing the data contained in the node
+ *
+ * Arguments:
+ * node -- The node whose structural memory you wish to free
+ */
 void freeNodeStructure( BSTNode *node ) {
     free( node );
 }

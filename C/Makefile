@@ -24,18 +24,18 @@ test-llist: llist.o utils.o test-llist.o
 	${CC} ${CFLAGS} -o test-llist test-llist.o llist.o utils.o
 
 # Binary Search Tree make directives
-bst.o: bst.c bst.h utils.h functions.h vector.h vector.c
+bst.o: bst.c bst.h utils.h functions.h
 	${CC} ${CFLAGS} -c bst.c
 
-test-bst: bst.o utils.o test-bst.o vector.o
-	${CC} ${CFLAGS} -o test-bst test-bst.o bst.o utils.o vector.o
+test-bst: bst.o utils.o test-bst.o
+	${CC} ${CFLAGS} -o test-bst test-bst.o bst.o utils.o
 
 # Set make directives
-set.o: set.c set.h bst.c bst.h vector.h vector.c utils.h functions.h
+set.o: set.c set.h bst.c bst.h utils.h functions.h
 	${CC} ${CFLAGS} -c set.c
 
-test-set: set.o bst.o vector.o utils.o test-set.o
-	${CC} ${CFLAGS} -o test-set test-set.o bst.o set.o vector.o utils.o
+test-set: set.o bst.o utils.o test-set.o
+	${CC} ${CFLAGS} -o test-set test-set.o bst.o set.o utils.o
 
 # Add a clean target that silently removes the .o files
 clean:

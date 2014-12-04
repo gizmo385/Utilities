@@ -89,23 +89,23 @@ Set *setUnion( Set *setA, Set *setB, ComparisonFunction comparisonFunction ) {
     }
 
     // Get the elements from A & B, create a new Set
-    Vector *vectorA = bstVector( setA->elements );
-    Vector *vectorB = bstVector( setB->elements );
+    void **elementsA = bstElements( setA->elements );
+    void **elementsB = bstElements( setB->elements );
     Set *unionResult = newSet( comparisonFunction );
 
     // Insert the elements from A into the set
-    for( int i = 0; i < vectorA->size; i++ ) {
-        setAdd( unionResult, vectorGet(vectorA, i) );
+    for( int i = 0; i < setA->size; i++ ) {
+        setAdd( unionResult, elementsA[i] );
     }
 
     // Insert the elements from B into the set
-    for( int i = 0; i < vectorB->size; i++ ) {
-        setAdd( unionResult, vectorGet(vectorB, i) );
+    for( int i = 0; i < setB->size; i++ ) {
+        setAdd( unionResult, elementsB[i] );
     }
 
     // Free the structure from the element vectors
-    vectorFreeStructure( vectorA );
-    vectorFreeStructure( vectorB );
+    free( elementsA );
+    free( elementsB );
 
     return unionResult;
 }
@@ -135,10 +135,10 @@ Set *setIntersect( Set *setA, Set *setB, ComparisonFunction comparisonFunction )
 
     // Iterate over the smaller set
     if( setA->size <= setB->size ) {
-        Vector *vector = bstVector( setA->elements );
+        void **elements = bstElements( setA->elements );
 
-        for( int i = 0; i < vector->size; i++ ) {
-            void *element = vectorGet( vector, i );
+        for( int i = 0; i < setA->size; i++ ) {
+            void *element = elements[i];
 
             // If the element is in both sets, add it
             if( isInSet( setB, element ) ) {
@@ -146,19 +146,20 @@ Set *setIntersect( Set *setA, Set *setB, ComparisonFunction comparisonFunction )
             }
         }
 
-        vectorFreeStructure( vector );
+        free( elements );
     } else {
-        Vector *vector = bstVector( setB->elements );
+        void **elements = bstElements( setB->elements );
 
-        for( int i = 0; i < vector->size; i++ ) {
-            void *element = vectorGet( vector, i );
+        for( int i = 0; i < setB->size; i++ ) {
+            void *element = elements[i];
 
+            // If the element is in both sets, add it
             if( isInSet( setA, element ) ) {
                 setAdd( intersectionResult, element );
             }
         }
 
-        vectorFreeStructure( vector );
+        free( elements );
     }
 
     return intersectionResult;
@@ -172,13 +173,13 @@ Set *setIntersect( Set *setA, Set *setB, ComparisonFunction comparisonFunction )
  * consumer -- The function that will be applied to every element within the set.
  */
 void setForEach( Set *set, ElementConsumer consumer ) {
-    Vector *elements = bstVector( set->elements );
+    void **elements = bstElements( set->elements );
 
-    for( int i = 0; i < elements->size; i++ ) {
-        consumer( vectorGet(elements, i) );
+    for( int i = 0; i < set->size; i++ ) {
+        consumer( elements[i] );
     }
 
-    vectorFreeStructure( elements );
+    free( elements );
 }
 
 /*
@@ -207,15 +208,15 @@ Set *setMap( Set *set, MapFunction function, ComparisonFunction comparisonFuncti
 
     // Create the new set and get the elements from the old set
     Set *result = newSet( comparisonFunction );
-    Vector *elements = bstVector( set->elements );
+    void **elements = bstElements( set->elements );
 
     // Apply the function to each element in the old set, then add it to the new set
-    for( int i = 0; i < elements->size; i++ ) {
-        void *element = function( vectorGet(elements, i) );
+    for( int i = 0; i < set->size; i++ ) {
+        void *element = function( elements[i] );
         setAdd( result, element );
     }
 
-    vectorFreeStructure( elements );
+    free( elements );
     return result;
 }
 
