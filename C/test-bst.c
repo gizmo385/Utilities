@@ -96,6 +96,7 @@ void testTraversals() {
         void *element = elements[i];
         printf( "%d ", *(int *)element );
     }
+    free( elements );
     debug( E_DEBUG, "\n" );
     debug(E_DEBUG, "-------------------------------------------\n\n" );
 
