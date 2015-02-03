@@ -20,13 +20,18 @@
 #define E_ALL       E_FATAL | E_ERROR | E_WARNING | E_DEBUG | E_INFO
 
 /* Assert macros */
-#define assertTrue(assertionValue, msgFormat, ...) __assert((assertionValue), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
-#define assertFalse(assertionValue, msgFormat, ...) __assert(((assertionValue) == 0), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
-#define assertNull(assertionValue, msgFormat, ...) __assert(((assertionValue) == NULL), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
-#define assertNotNull(assertionValue, msgFormat, ...) __assert(((assertionValue) != NULL), __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
+#define assertTrue(assertionValue, msgFormat, ...) __assert((assertionValue), __FILE__, __LINE__,\
+        __func__, msgFormat,  ##__VA_ARGS__ )
 
-//extern void __assert( bool assertionValue, char *srcFilename, int lineNumber, char *functionName,
-        //char *msgFormat, ... );
+#define assertFalse(assertionValue, msgFormat, ...) __assert(((assertionValue) == 0), __FILE__,\
+        __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
+
+#define assertNull(assertionValue, msgFormat, ...) __assert(((assertionValue) == NULL), __FILE__,\
+        __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
+
+#define assertNotNull(assertionValue, msgFormat, ...) __assert(((assertionValue) != NULL),\
+        __FILE__, __LINE__, __func__, msgFormat,  ##__VA_ARGS__ )
+
 extern int globalDebugLevel;
 extern FILE *debugOutputStream;
 
