@@ -47,7 +47,8 @@ void testTreeInsertion() {
         bstInsert( bst, mallocInt( rand() ) );
     }
 
-    assertTrue( bst->size == numElements, "BST Size should be %d, was %d!\n", numElements, bst->size );
+    assertTrue( bst->size == numElements, "BST Size should be %d, was %d!\n", numElements,
+            bst->size );
 
     bstFree( bst );
 }
@@ -138,7 +139,8 @@ void testTreeRemoval() {
         insertedElements[i] = elementToInsert;
     }
 
-    assertTrue( bst->size == numElements, "BST size should be %d, was %d!\n", numElements, bst->size );
+    assertTrue( bst->size == numElements, "BST size should be %d, was %d!\n", numElements,
+            bst->size );
 
     // Remove the elements
     for( int i = 0; i < numElements; i++ ) {
