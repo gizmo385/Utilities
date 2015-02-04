@@ -5,6 +5,8 @@ CFLAGS = -g -Wall -std=c99
 # This regular expression matches the names of files from the test make directives
 BINARY_REGEX = "test-(\w+)$$"
 
+####################################################################################################
+
 # Utility targets
 utils.o: utils.c utils.h
 	${CC} ${CFLAGS} -c utils.c
@@ -47,6 +49,14 @@ test-set: set.o bst.o utils.o test-set.o
 
 ####################################################################################################
 
+# Map make directives
+map.o: map.c map.h bst.c bst.h vector.c vector.h utils.h functions.h
+	${CC} ${CFLAGS} -c map.c
+
+test-map: map.o bst.o vector.o utils.o test-map.o
+	${CC} ${CFLAGS} -o test-map test-map.o bst.o vector.o map.o utils.o
+
+####################################################################################################
 # Add a clean target that silently removes the .o files
 clean:
 	@rm *.o 2> /dev/null || true
