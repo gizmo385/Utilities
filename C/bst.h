@@ -3,6 +3,10 @@
 
 #include "functions.h"
 
+/**************************************************************************************************
+ * Structure and type definitions
+ *************************************************************************************************/
+
 typedef struct BSTNode {
     void *data;
     struct BSTNode *parent;
@@ -20,6 +24,10 @@ typedef struct BST {
  * A BST Node Consumer function takes a BST node and performs some operation on it.
  */
 typedef void (*BSTNodeConsumer)(BSTNode *);
+
+/**************************************************************************************************
+ * Constructor Functions
+ *************************************************************************************************/
 
 /*
  * Creates a new binary search tree node. This node has some data, and references to its left and
@@ -48,6 +56,10 @@ extern BSTNode *newNode( void *data, BSTNode *parent, BSTNode *left, BSTNode *ri
  */
 extern BST *newBST( ComparisonFunction comparisonFunction );
 
+/**************************************************************************************************
+ * Insertion functions
+ *************************************************************************************************/
+
 /*
  * Inserts an element into the tree. This element will be placed in its correct ordinal position as
  * determined by the tree's comparison function. If the element or the treeis NULL, then the element
@@ -58,6 +70,10 @@ extern BST *newBST( ComparisonFunction comparisonFunction );
  * elementToInsert -- The element that you would like to insert into the tree.
  */
 extern void bstInsert( BST *bst, void *elementToInsert );
+
+/**************************************************************************************************
+ * Removal functions
+ *************************************************************************************************/
 
 /*
  * Attempts to find the desired element from the tree. If the element cannot be found, then this
@@ -71,6 +87,28 @@ extern void bstInsert( BST *bst, void *elementToInsert );
  * The element that was removed, or NULL if the element could not be found.
  */
 extern void *bstRemove( BST *bst, void *elementToRemove );
+
+/**************************************************************************************************
+ * Find functions
+ *************************************************************************************************/
+
+/*
+ * Attempts to the find the node in the binary search tree that contains the desired element. If the
+ * element can't be found, return NULL.
+ *
+ * Arguments:
+ * bst     -- The binary search tree to search through
+ * element -- The element that is being searched for
+ *
+ * Returns:
+ * The node containing the element that you were searching for. If the item couldn't be found, this
+ * will return NULL.
+ */
+extern void *bstFind( BST *bst, void *element );
+
+/**************************************************************************************************
+ * Tree traversal functions
+ *************************************************************************************************/
 
 /*
  * Finds the ordinal successor for a tree node.
@@ -93,20 +131,6 @@ extern BSTNode *successor( BSTNode *node );
  * The node that is the ordinal predecessor for the provided node
  */
 extern BSTNode *predecessor( BSTNode *node );
-
-/*
- * Attempts to the find the node in the binary search tree that contains the desired element. If the
- * element can't be found, return NULL.
- *
- * Arguments:
- * bst     -- The binary search tree to search through
- * element -- The element that is being searched for
- *
- * Returns:
- * The node containing the element that you were searching for. If the item couldn't be found, this
- * will return NULL.
- */
-extern void *bstFind( BST *bst, void *element );
 
 /*
  * Performs a pre-order traversal and executes the consumer function on each node in the traversal.
@@ -152,6 +176,10 @@ extern void bstPostOrder( BST *bst, BSTNodeConsumer consumer );
  * An array containing data from the binary search tree.
  */
 extern void **bstElements( BST *bst );
+
+/**************************************************************************************************
+ * Free functions
+ *************************************************************************************************/
 
 /*
  * Frees the binary search tree and all nodes within it. This is expressed as a post order traversal
