@@ -23,4 +23,9 @@ typedef void (*ElementConsumer)(void *);
  */
 typedef void *(*MapFunction)(void *);
 
+/*
+ * A hash function takes a value and determines a unique numerical representation of that object
+ */
+typedef int (*HashFunction)(void *);
+
 #endif
