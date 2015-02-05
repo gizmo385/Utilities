@@ -7,11 +7,26 @@
  * Structure and type definitions
  *************************************************************************************************/
 
+/*
+ * A list node is contains a reference to the data contained within the node and the node that comes
+ * immediately after itself. It contains the following fields:
+ *
+ * data -- A reference to the data that is contained within this node
+ * next -- The node that comes immediatley after this node (or NULL if none is present)
+ */
 typedef struct ListNode {
     void *data;
     struct ListNode *next;
 } ListNode;
 
+/*
+ * A linked list is a data structure where each node knows that the data that is contains and has
+ * a reference to the node that immediately follows it. It contains the following fields:
+ *
+ * head -- The first node in the list
+ * size -- The number of nodes in the list
+ * comparisonFunction -- A function which can be used to compare node data
+ */
 typedef struct LList {
     ListNode *head;
     int size;
