@@ -10,6 +10,12 @@
  * Structure and type definitions
  *************************************************************************************************/
 
+/*
+ * A set is a list of items that contains no duplicates. It contains the following fields:
+ *
+ * elements -- A binary search tree that makes up the structure of the set
+ * size -- The number of elements in the set
+ */
 typedef struct Set {
     BST *elements;
     int size;
