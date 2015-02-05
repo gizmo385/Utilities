@@ -1,6 +1,10 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+/**************************************************************************************************
+ * Structure and type definitions
+ *************************************************************************************************/
+
 /**
  * A vector is defined by three compositional elements:
  *
@@ -15,6 +19,10 @@ typedef struct Vector {
     void **elements;
 } Vector;
 
+/**************************************************************************************************
+ * Constructor Functions
+ *************************************************************************************************/
+
 /*
  * Creates a new vector that has a specific amount of specific previously allocated.
  *
@@ -25,6 +33,10 @@ typedef struct Vector {
  * A pointer to a newly allocated Vector
  */
 extern Vector *newVector( int initialCapacity );
+
+/**************************************************************************************************
+ * Insertion functions
+ *************************************************************************************************/
 
 /*
  * Adds an element to the supplied vector. In the case that the size == capacity, the vector will
@@ -51,6 +63,10 @@ extern void vectorAdd( Vector *vector, void *element );
  */
 extern int vectorInsert( Vector *vector, void *element, int index );
 
+/**************************************************************************************************
+ * Removal functions
+ *************************************************************************************************/
+
 /*
  * Removes the element from the vector at the specified location.
  *
@@ -59,6 +75,10 @@ extern int vectorInsert( Vector *vector, void *element, int index );
  * index  -- The index of the element to remove
  */
 extern void *vectorRemove( Vector *vector, int index );
+
+/**************************************************************************************************
+ * Member access functions
+ *************************************************************************************************/
 
 /*
  * Returns whether or not the supplied vector is empty. This will return 1 when the vector is empty
@@ -83,6 +103,10 @@ extern int vectorIsEmpty( Vector *vector );
  * The element in the location
  */
 extern void *vectorGet( Vector *vector, int index );
+
+/**************************************************************************************************
+ * Free functions
+ *************************************************************************************************/
 
 /*
  * Frees up the memory used by the vector.

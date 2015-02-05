@@ -1,7 +1,11 @@
 #ifndef LLIST_H
 #define LLIST_H
 
-typedef int (*ComparisonFunction)(void *, void *);
+#include "functions.h"
+
+/**************************************************************************************************
+ * Structure and type definitions
+ *************************************************************************************************/
 
 typedef struct ListNode {
     void *data;
@@ -14,6 +18,9 @@ typedef struct LList {
     ComparisonFunction comparisonFunction;
 } LList;
 
+/**************************************************************************************************
+ * Constructor Functions
+ *************************************************************************************************/
 
 /*
  * Creates a new linked list node.
@@ -35,6 +42,10 @@ extern ListNode *newListNode( void* data, ListNode *next );
  */
 extern LList *newList();
 
+/**************************************************************************************************
+ * Insertion functions
+ *************************************************************************************************/
+
 /*
  * Inserts the element into the list.
  *
@@ -43,6 +54,10 @@ extern LList *newList();
  * data -- The data to be added into the list
  */
 extern void listInsert( LList *list, void *data );
+
+/**************************************************************************************************
+ * Removal functions
+ *************************************************************************************************/
 
 /*
  * Removes the specified data element from the list
@@ -56,6 +71,10 @@ extern void listInsert( LList *list, void *data );
  */
 extern void *listRemove( LList *list, void *data );
 
+/**************************************************************************************************
+ * Find functions
+ *************************************************************************************************/
+
 /*
  * Searchs for and returns the element in the list
  *
@@ -67,6 +86,10 @@ extern void *listRemove( LList *list, void *data );
  * The ListNode containing the desired data, or NULL if it can't be found
  */
 extern ListNode *listFind( LList *list, void *data );
+
+/**************************************************************************************************
+ * Free functions
+ *************************************************************************************************/
 
 /*
  * Frees the list and the nodes in the list

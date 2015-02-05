@@ -6,10 +6,18 @@
 #include "bst.h"
 #include "functions.h"
 
+/**************************************************************************************************
+ * Structure and type definitions
+ *************************************************************************************************/
+
 typedef struct Set {
     BST *elements;
     int size;
 } Set;
+
+/**************************************************************************************************
+ * Constructor Functions
+ *************************************************************************************************/
 
 /*
  * Creates a new set that uses a binary search tree as its backing element representation. A set
@@ -24,6 +32,10 @@ typedef struct Set {
  */
 extern Set *newSet( ComparisonFunction comparisonFunction );
 
+/**************************************************************************************************
+ * Insertion functions
+ *************************************************************************************************/
+
 /*
  * Attempts to add the element to the set. If the element is already present in the set, then it is
  * not added. If the element was added, then the size of the set will be incremented by 1.
@@ -34,6 +46,10 @@ extern Set *newSet( ComparisonFunction comparisonFunction );
  */
 extern void setAdd( Set *set, void *element );
 
+/**************************************************************************************************
+ * Removal functions
+ *************************************************************************************************/
+
 /*
  * Attempts to remove the element from the set.
  *
@@ -42,6 +58,10 @@ extern void setAdd( Set *set, void *element );
  * element -- The element to remove from the set
  */
 extern void setRemove( Set *set, void *element );
+
+/**************************************************************************************************
+ * Fundamental set operations
+ *************************************************************************************************/
 
 /*
  * Determines whether or not the provided item is in the set
@@ -89,6 +109,10 @@ extern Set *setUnion( Set *setA, Set *setB, ComparisonFunction comparisonFunctio
  */
 extern Set *setIntersect( Set *setA, Set *setB, ComparisonFunction comparisonFunction );
 
+/**************************************************************************************************
+ * Iteration functions
+ *************************************************************************************************/
+
 /*
  * Applies the consumer function to every element within the set.
  *
@@ -116,6 +140,10 @@ extern void setForEach( Set *set, ElementConsumer consumer );
  * A new set containing every element within the original set after the function has been applied.
  */
 extern Set *setMap( Set *set, MapFunction function, ComparisonFunction comparisonFunction);
+
+/**************************************************************************************************
+ * Free functions
+ *************************************************************************************************/
 
 /*
  * Frees the memory used by this set.
