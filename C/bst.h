@@ -7,6 +7,15 @@
  * Structure and type definitions
  *************************************************************************************************/
 
+/*
+ * A binary search tree node holds an individual item that is to be kept in a search tree. It
+ * consists of 4 fields:
+ *
+ * data   -- This is actual data that is contained with a node and can be of any type
+ * parent -- The node that has this node as a child
+ * left   -- This node's left child
+ * right  -- This node's right child
+ */
 typedef struct BSTNode {
     void *data;
     struct BSTNode *parent;
@@ -14,6 +23,18 @@ typedef struct BSTNode {
     struct BSTNode *right;
 } BSTNode;
 
+/*
+ * A binary search tree is a search tree where each node has at most 2 children. For all nodes in
+ * this binary search tree, they follow the same behavior. Children who are ordinally smaller than
+ * a node are left children and children who are ordinally larger than a node are right children.
+ *
+ * This tree consists of 3 fields:
+ *
+ * root -- The first node in the tree. This is the only node in the tree that does not have
+ *         a parent.
+ * comparisonFunction -- A function which can be used to compare elements within the tree
+ * size -- The number of elements in this tree. Maintained on insertions and deletions
+ */
 typedef struct BST {
     BSTNode *root;
     ComparisonFunction comparisonFunction;
