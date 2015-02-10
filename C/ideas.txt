@@ -1,0 +1,5 @@
+map.h
+* Consider adding Map struct. Struct would contain function pointers for the functions that it would
+  use (add, find, remove, etc)
+* There would be two separate implementations. A hash map implementation and a tree map
+  implementation
