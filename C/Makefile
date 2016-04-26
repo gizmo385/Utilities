@@ -37,6 +37,13 @@ set.o: set.c set.h bst.c bst.h utils.h functions.h
 test-set: set.o bst.o utils.o test-set.o
 	${CC} ${CFLAGS} -o test-set test-set.o bst.o set.o utils.o
 
+# Fat pointer make
+fat.o: fat.c fat.h
+	${CC} ${CFLAGS} -c fat.c
+
+test_fat: fat.o test_fat.o
+	${CC} ${CFLAGS} -o test-fat test_fat.o fat.o
+
 # Add a clean target that silently removes the .o files
 clean:
 	@rm *.o 2> /dev/null || true
